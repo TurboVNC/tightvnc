@@ -1,0 +1,1322 @@
+2003-07-31 06:52  const_k
+
+	* InstInfo.rtf, TightVNC.iss: Prepared installation files for the
+	1.2.9 release.
+
+2003-07-31 06:52  const_k
+
+	* InstInfo.rtf: file InstInfo.rtf was initially added on branch
+	BRANCH_1_2_STABLE.
+
+2003-07-31 04:30  const_k
+
+	* vncviewer/: Daemon.cpp, Flasher.cpp: Minor fix to prevent
+	crashing on a socket error, in the listening mode.
+
+2003-07-31 04:09  const_k
+
+	* winvnc/vncDesktop.cpp: Minor fix from Stephan Edelman -- on
+	disconnect, font smoothing did not set back to its previous state.
+
+2003-07-31 03:59  const_k
+
+	* winvnc/vncDesktop.cpp: Minor fix -- a variable was not properly
+	initialized.
+
+2003-07-31 03:42  const_k
+
+	* winvnc/: WinVNC.dsp, WinVNC.rc, resource.h, vncHTTPConnect.cpp:
+	Added HTTPConnectSocket and HTTPConnectSocketFactory classes.
+
+2003-07-31 02:07  const_k
+
+	* winvnc/res/HTTPConnectSocket.class: file HTTPConnectSocket.class
+	was initially added on branch BRANCH_1_2_STABLE.
+
+2003-07-31 02:07  const_k
+
+	* winvnc/res/: HTTPConnectSocket.class,
+	HTTPConnectSocketFactory.class, RfbProto.class, VncViewer.class,
+	VncViewer.jar: The Java viewer classes updated for the 1.2.9
+	release.
+
+2003-07-31 02:07  const_k
+
+	* winvnc/res/HTTPConnectSocketFactory.class: file
+	HTTPConnectSocketFactory.class was initially added on branch
+	BRANCH_1_2_STABLE.
+
+2003-07-23 11:10  const_k
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/VNCHooks/VNCHooks.rc,
+	winvnc/WinVNC.rc: Version strings changed, version 1.2.9.
+
+2003-07-23 10:53  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.h: Added the possibility to use the
+	-connect option without arguments, to bring up the "Add New Client"
+	dialog. This is a change copied from the head branch.
+
+2003-07-23 10:29  const_k
+
+	* vncviewer/VNCviewerApp32.cpp: A long-standing bug has been fixed
+	- the logic to handle retries after authentication failures was
+	flawed, and used to delete the same object twice under certain
+	conditions. This is a change copied from the head branch.
+
+2003-07-23 10:24  const_k
+
+	* winvnc/.cvsignore: Ignoring No_CORBA directory.
+
+2003-07-10 15:53  const_k
+
+	* winvnc/vncDesktop.cpp: Closing HKEY_CURRENT_USER properly on
+	restoring display settings. This change should solve problems with
+	reading the registry in the service mode. The password reset
+	problem seems to be solved.
+
+2003-07-10 15:33  const_k
+
+	* winvnc/: vncAdvancedProperties.cpp, vncProperties.cpp: Restored
+	the code closing the HKCU registry hive. This code was removed to
+	workaround a password reset problem, but had introduced another
+	issue that can be considered even worse. Now we should find other
+	ways to fix old password reset problem.
+
+2003-03-08 13:17  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.h: Implemented a possibility to
+	specify port numbers with winvnc -connect option, using the
+	"host::port" format.
+
+2003-02-22 22:57  const_k
+
+	* winvnc/.cvsignore: Ignoring WinVNC.log.bak as well.
+
+2003-02-22 10:41  const_k
+
+	* .cvsignore, vncviewer/.cvsignore, vncviewer/libjpeg/.cvsignore,
+	vncviewer/omnithread/.cvsignore, vncviewer/res/.cvsignore,
+	vncviewer/zlib/.cvsignore, winvnc/VNCHooks/.cvsignore,
+	winvnc/libjpeg/.cvsignore, winvnc/zlib/.cvsignore: MS-DOS line
+	endings have been replaced with Unix linefeeds.
+
+2003-02-22 10:35  const_k
+
+	* winvnc/.cvsignore: Ignoring WinVNC.log. Also, MS-DOS line endings
+	has been replaced with Unix linefeeds.
+
+2003-02-19 00:16  const_k
+
+	* .cvsignore, vncviewer/.cvsignore, vncviewer/libjpeg/.cvsignore,
+	vncviewer/omnithread/.cvsignore, vncviewer/res/.cvsignore,
+	vncviewer/zlib/.cvsignore, winvnc/.cvsignore,
+	winvnc/VNCHooks/.cvsignore, winvnc/libjpeg/.cvsignore,
+	winvnc/zlib/.cvsignore: Added .cvsignore files.
+
+2003-02-19 00:16  const_k
+
+	* .cvsignore, vncviewer/.cvsignore, vncviewer/libjpeg/.cvsignore,
+	vncviewer/omnithread/.cvsignore, vncviewer/res/.cvsignore,
+	vncviewer/zlib/.cvsignore, winvnc/.cvsignore,
+	winvnc/VNCHooks/.cvsignore, winvnc/libjpeg/.cvsignore,
+	winvnc/zlib/.cvsignore: file .cvsignore was initially added on
+	branch BRANCH_1_2_STABLE.
+
+2003-02-19 00:14  const_k
+
+	* winvnc/vncProperties.cpp: A quick fix for the problem with
+	"QuerySetting" and "QueryTimeout" options -- they could be copied
+	from user to default settings without user's intention.
+
+2003-02-19 00:09  const_k
+
+	* winvnc/vncAdvancedProperties.cpp: Removed a MessageBox() used for
+	debugging purposes.
+
+2003-02-05 15:03  const_k
+
+	* winvnc/: vncAcceptDialog.cpp, vncClient.cpp: Major bugfix --
+	handling of the QueryAllowNoPass option was seriously broken. In
+	addition to solving this issue, this patch re-organizes and fixes
+	the InitAuthenticate() function in several more ways. E.g. the
+	order of checks is now different -- first it checks for disabled
+	empty passwords and loopback connections, then it checks AuthHosts
+	settings and shows the query dialog, and only after that it
+	requests authentication if necessary. Now the InitAuthenticate()
+	function is much more mature and its code is much more readable.
+
+2003-01-31 05:46  const_k
+
+	* TightVNC.iss: Included the logo/ directory into the installed Web
+	site copy.  Shortcuts to ChangeLog and WhatsNew text files replaced
+	with links to corresponding HTML files.
+
+2003-01-25 07:50  const_k
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, version
+	1.2.8.
+
+2003-01-25 07:23  const_k
+
+	* TightVNC.iss: Uncheck "install service" and "(re)start service"
+	tasks by default.
+
+2003-01-21 18:02  const_k
+
+	* winvnc/vncMenu.cpp: Minor fix: returning 0 after processing the
+	MENU_REMOVE_CLIENTS_MSG.
+
+2003-01-21 17:59  const_k
+
+	* winvnc/vncProperties.cpp: Fixed a spelling issue in copyright
+	strings.
+
+2003-01-21 14:17  const_k
+
+	* winvnc/vncMenu.cpp: Ported code from RealVNC 3.3.6, file
+	vncMenu.cpp: support for the AllowEditClients option, killing
+	Active Desktop on removing wallpaper, and other less significant
+	changes.
+
+2003-01-21 14:14  const_k
+
+	* winvnc/: WinVNC.rc, resource.h: Ported features from RealVNC
+	3.3.6: added RemoveWallpaper and LockSetting options to the
+	Properties dialog, and started porting of the AllowEditClients
+	option.
+
+2003-01-21 12:44  const_k
+
+	* winvnc/: vncProperties.cpp, vncProperties.h, vncServer.cpp,
+	vncService.cpp, vncService.h: Ported features from RealVNC 3.3.6:
+	added RemoveWallpaper and LockSetting options to the Properties
+	dialog, and started porting of the AllowEditClients option.
+
+2003-01-21 12:27  const_k
+
+	* winvnc/vncProperties.cpp: Minor GUI improvement: moving initial
+	keyboard focus in the Properties dialog to the password text field.
+
+2003-01-20 13:35  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.h, WinVNC.rc, resource.h, stdhdrs.h,
+	vncClient.cpp, vncMenu.cpp, vncProperties.cpp, vncProperties.h,
+	vncServer.cpp, vncServer.h, vncService.cpp: Fixes and cleanups for
+	the previously applied patch accepted from Dennis Syrovatsky.
+
+2003-01-18 04:09  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.dsp, WinVNC.h, WinVNC.rc, resource.h,
+	stdhdrs.h, vncClient.cpp, vncMenu.cpp, vncMenu.h,
+	vncProperties.cpp, vncProperties.h, vncServer.cpp, vncServer.h,
+	vncService.cpp, vncService.h: Applied a patch to WinVNC from Dennis
+	Syrovatsky. The patch adds support for two passwords (full-control
+	and view-only) in WinVNC, and new -reload command-line option.
+
+2002-12-16 14:25  const_k
+
+	* winvnc/vncKeymap.cpp: Eliminated compilation warnings under MS
+	VC++.
+
+2002-12-16 09:12  const_k
+
+	* winvnc/: vncAdvancedProperties.cpp, vncProperties.cpp: This
+	change seems to solve the password reset problem. The password
+	could get changed in the registry on opening Properties dialog and
+	hitting the Ok button, without making any changes.
+
+2002-11-28 05:23  const_k
+
+	* TightVNC.url: file TightVNC.url was initially added on branch
+	BRANCH_1_2_STABLE.
+
+2002-11-28 05:23  const_k
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	TightVNC.url, vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, installation
+	script updated, version 1.2.7.
+
+2002-11-28 01:33  const_k
+
+	* winvnc/: WinVNC.rc, vncConnDialog.cpp: Allowing host::port format
+	in the "Add new client" dialog.
+
+2002-11-28 01:32  const_k
+
+	* vncviewer/: ClientConnectionFile.cpp, VNCOptions.h: Registering
+	.vnc extension on saving a .vnc file, a change from RealVNC 3.3.6.
+
+2002-11-28 01:29  const_k
+
+	* vncviewer/: VNCOptions.cpp, VNCOptions.h, VNCviewerApp32.cpp: Now
+	the viewer accepts a port number after the -listen command-line
+	option. The changes were ported from RealVNC 3.3.6.
+
+2002-11-28 01:29  const_k
+
+	* vncviewer/ClientConnection.cpp: A macro to compare pixel formats,
+	and better default formats for 8-bit and 16-bit modes. The changes
+	were ported from RealVNC 3.3.6.
+
+2002-11-28 01:28  const_k
+
+	* winvnc/: vncService.cpp, vncService.h: Ported vncService changes
+	from RealVNC 3.3.6. The modifications include a change in the
+	service helper code -- now it tries to contact the service several
+	times, waiting up to one minute.
+
+2002-11-27 22:05  const_k
+
+	* winvnc/vncKeymap.cpp: Ported keyboard handling changes from
+	RealVNC 3.3.6. This should fix shift+arrows problems under
+	Win95/98.
+
+2002-11-27 22:03  const_k
+
+	* winvnc/: tableinitcmtemplate.cpp, vncClient.cpp, vncDesktop.cpp,
+	vncService.cpp: Improved some log messages on errors.
+
+2002-11-27 08:11  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.h, vncService.cpp, vncService.h:
+	Adopted new -reinstall option from RealVNC 3.3.5, together with a
+	number of other changes from vncService.cpp.
+
+2002-11-26 21:34  const_k
+
+	* vncviewer/KeyMap.cpp, winvnc/keysymdef.h, winvnc/vncAbout.h,
+	winvnc/vncClient.cpp, winvnc/vncKeymap.cpp, winvnc/vncKeymap.h:
+	Ported improved keyboard handling from RealVNC 3.3.5.
+
+2002-11-26 04:53  const_k
+
+	* winvnc/WinVNC.rc: Improved layouts of the "Properties" and
+	"Advanced Properties" dialogs -- now "OK", "Apply" and "Cancel"
+	buttons on both dialogs look similarly.
+
+2002-11-25 20:36  const_k
+
+	* winvnc/: WinVNC.dsp, WinVNC.rc, resource.h, vncHTTPConnect.cpp,
+	res/OptionsFrame.class, res/RecordingFrame.class,
+	res/ReloginPanel.class, res/RfbProto.class,
+	res/SocketFactory.class, res/VncCanvas.class, res/VncViewer.class,
+	res/VncViewer.jar: Java viewer updated to the most recent version.
+
+2002-11-25 20:31  const_k
+
+	* winvnc/: vncRegion.cpp, vncRegion.h: Minor optimization -- made
+	the vncRegion::isEmpty() method inline.
+
+2002-11-25 20:30  const_k
+
+	* winvnc/: rfbproto.h, vncClient.cpp, vncClient.h: Added support
+	for new PointerPos pseudo-encoding which allows to transmit pointer
+	position from server to clients. Also, eliminated high CPU usage on
+	sending cursor shape updates.
+
+2002-11-25 20:29  const_k
+
+	* vncviewer/VNCOptions.cpp: Enabling JPEG compression in Tight
+	encoding by default, new /nojpeg option to disable JPEG
+	compression.
+
+2002-11-25 20:28  const_k
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	ClientConnectionCursor.cpp, rfbproto.h: Added support for new
+	PointerPos pseudo-encoding which allows to transmit pointer
+	position from server to clients.
+
+2002-11-25 08:47  const_k
+
+	* winvnc/vncProperties.cpp: Minor GUI improvement -- on selecting
+	radio buttons or checkboxes, move focus to the related edit
+	controls.
+
+2002-11-25 08:46  const_k
+
+	* vncviewer/: vncviewer.cpp, res/vncviewer.rc: Added support for
+	the format "host::port" in the connection dialog, in addition to
+	the standard "host:display" format.
+
+2002-11-25 08:09  const_k
+
+	* vncviewer/rfbproto.h, winvnc/rfbproto.h: Documented the Tight
+	encoding.
+
+2002-11-25 07:50  const_k
+
+	* winvnc/: WinVNC.rc, resource.h, rfb.h, vncAdvancedProperties.cpp,
+	vncProperties.cpp, vncProperties.h, vncServer.cpp, vncServer.h:
+	Major layout changes in "Properties" and "Advanced Properties"
+	dialogs. New "Properties" dialog allows to specify arbitrary RFB
+	and HTTP ports directly, in addition to display numbers.
+
+2002-11-25 04:59  const_k
+
+	* winvnc/: VSocket.cpp, vncDesktop.cpp: Reverted minor cleanups
+	provided by Andrew van der Stock aimed to get rid of compilation
+	warnings under Visual Studio 7. These changes in #include
+	directives seemed to add dependencies to VC/MFC DLLs.
+
+2002-11-25 04:56  const_k
+
+	* README-bin.txt: Included a paragraph about donations.
+
+2002-11-25 04:55  const_k
+
+	* winvnc/vncEncodeTight.cpp: Decreased JPEG quality factors for low
+	quality levels.
+
+2002-11-25 04:52  const_k
+
+	* winvnc/vncClient.cpp: Fixed a problem with processing of mouse
+	events -- coordinates could be incorrect if mouse was moved on the
+	server or by another client (modified patch from Greg Breland).
+
+2002-11-13 06:22  const_k
+
+	* winvnc/res/: ReloginPanel.class, SocketFactory.class: Java viewer
+	updated to the most recent version.
+
+2002-08-30 06:51  const_k
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, version
+	1.2.6.
+
+2002-08-30 06:25  const_k
+
+	* winvnc/: VSocket.cpp, VSocket.h: Now checking if an address is in
+	use before the bind() call is optional and turned off by default.
+	This lets WinVNC to listen on specified port numbers regardless of
+	is the address is used by another process. If the display number is
+	set to "auto", WinVNC will behave as usual -- it will find the
+	lowest available display. One visible effect of this change is that
+	the delay between starting up and showing the icon is greatly
+	reduced.
+
+2002-08-30 06:19  const_k
+
+	* winvnc/vncauth.c: Minor cleanups.
+
+2002-08-10 04:32  const
+
+	* TightVNC.iss: Updates install script, to install a copy of the
+	TightVNC Web site, and to create shortcuts to most important
+	documentation pages.
+
+2002-08-10 02:24  const
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, version
+	1.2.5.
+
+2002-08-08 02:31  const
+
+	* vncviewer/rfbproto.h, winvnc/rfbproto.h: All structures and
+	unions are now named, modifications from Andrew van der Stock.
+
+2002-08-05 08:56  const
+
+	* vncviewer/: vncviewer.sln, libjpeg/libjpeg.vcproj,
+	zlib/zlib.vcproj: Updated Visual Studio 7 files from Andrew van der
+	Stock.
+
+2002-08-05 01:22  const
+
+	* InstInfo.txt: Formating fixes for variable-width fonts.
+
+2002-08-05 01:08  const
+
+	* InstInfo.txt: Updated notes on the remote upgrade.
+
+2002-08-05 00:35  const
+
+	* README-bin.txt: README for binary distributions.
+
+2002-08-04 10:23  const
+
+	* vncviewer/: vncviewer.sln, vncviewer.vcproj,
+	libjpeg/libjpeg.vcproj, omnithread/omnithread.vcproj,
+	zlib/zlib.vcproj: MS Visual Studio 7 solution and project files.
+
+2002-08-04 10:15  const
+
+	* winvnc/: WinVNC.dsp, WinVNC.rc, WinVNC.vcproj, resource.h,
+	vncHTTPConnect.cpp, res/ButtonPanel.class, res/OptionsFrame.class,
+	res/RecordingFrame.class, res/RfbProto.class,
+	res/SessionRecorder.class, res/VncCanvas.class,
+	res/VncViewer.class, res/VncViewer.jar: Java viewer updated to the
+	most recent version.
+
+2002-08-04 09:57  const
+
+	* InstInfo.txt, TightVNC.iss: Enabled remote upgrade in the
+	installation script.
+
+2002-08-04 09:47  const
+
+	* winvnc/WinVNC.rc: "Disable New Clients" -> "&Disable New Clients"
+	in the menu.
+
+2002-08-02 06:40  const
+
+	* winvnc/: WinVNC.sln, WinVNC.vcproj, VNCHooks/VNCHooks-vc.def,
+	VNCHooks/VNCHooks.def, VNCHooks/VNCHooks.vcproj,
+	libjpeg/libjpeg.vcproj, omnithread/omnithread.vcproj,
+	zlib/zlib.def, zlib/zlib.vcproj: Included solution and project
+	files for MS Visual Studio 7, prepared by Andrew van der Stock.
+
+2002-08-02 06:20  const
+
+	* TightVNC.iss, vncviewer/ClientConnectionCursor.cpp,
+	vncviewer/ClientConnectionTight.cpp, vncviewer/rfbproto.h,
+	winvnc/rfbproto.h, winvnc/vncBuffer.cpp, winvnc/vncBuffer.h,
+	winvnc/vncClient.cpp, winvnc/vncClient.h, winvnc/vncDesktop.cpp,
+	winvnc/vncEncodeTight.cpp, winvnc/vncEncodeTight.h,
+	winvnc/vncEncoder.cpp, winvnc/vncEncoder.h,
+	winvnc/VNCHooks/SharedData.cpp, winvnc/VNCHooks/SharedData.h:
+	Corrected the spelling of my name in the copyright strings. :-)
+
+2002-08-02 06:19  const
+
+	* README.txt: Minor updates.
+
+2002-08-02 06:03  const
+
+	* winvnc/: VSocket.cpp, WinVNC.cpp, tableinitcmtemplate.cpp,
+	tableinittctemplate.cpp, tabletranstemplate.cpp, translate.cpp,
+	vncBuffer.cpp, vncClient.cpp, vncDesktop.cpp, vncEncodeCoRRE.cpp,
+	vncEncodeCoRRE.h, vncEncodeRRE.cpp, vncEncodeRRE.h,
+	vncEncodeTight.h, vncHTTPConnect.cpp, vncRegion.cpp, vncServer.cpp,
+	libjpeg/jconfig.h, libjpeg/jmorecfg.h: A set of minor fixes from
+	Andrew van der Stock to suppress compilation warnings under MS
+	Visual Studio 7.
+
+2002-08-02 04:39  const
+
+	* winvnc/VSocket.cpp: Fixed a problem in I/O subsystem that was
+	introduced in TightVNC 1.2.2 and caused major slowdown in
+	communication with clients.
+
+2002-08-02 04:31  const
+
+	* winvnc/VSocket.h: Fixed copyright strings.
+
+2002-07-29 11:21  const
+
+	* vncviewer/ClientConnection.cpp: Tiny formatting cleanup. The
+	reason for this commit is that I forgot to fully describe the
+	changes introduced in the previous commit. ;-] The viewer window
+	now will be resized after changing the preferences only if new
+	scaling factor was set. Also, the window won't be centered after
+	such a size change -- it will try to preserve its current position.
+	In the full-screen mode, the viewer won't show the prompt each time
+	the window size is changing.
+
+2002-07-29 11:02  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	ClientConnectionFullScreen.cpp, rfbproto.h: Support for the
+	NewFBSize pseudo-encoding allowing to change framebuffer geometry
+	on server's request.
+
+2002-07-29 10:59  const
+
+	* winvnc/: vncAdvancedProperties.cpp, vncHTTPConnect.cpp,
+	vncHTTPConnect.h, vncProperties.cpp, vncServer.cpp, vncServer.h:
+	Support for the new "EnableURLParams" registry setting to make the
+	possibility to specify applet parameters in the URLs optional and
+	turned off by default.
+
+2002-07-29 10:55  const
+
+	* winvnc/vncHTTPConnect.cpp: Implemented a possibility to specify
+	applet parameters in the URL request for the HTTP server.
+
+2002-05-21 09:29  const
+
+	* TightVNC.iss: ChangeLog.txt file should be included into the
+	distribution.
+
+2002-05-19 06:35  const
+
+	* winvnc/res/: RfbProto.class, VncCanvas.class, VncViewer.class,
+	VncViewer.jar: Updated Java viewer.
+
+2002-05-08 20:23  const
+
+	* winvnc/WinVNC.cpp: Spelling correction for debug messages.
+
+2002-04-25 04:44  const
+
+	* BUILDING.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version numbers updated for version
+	1.2.4.
+
+2002-04-25 04:43  const
+
+	* vncviewer/res/vncviewer.rc: MS-DOS-style carriage returns
+	stripped.
+
+2002-04-25 04:40  const
+
+	* winvnc/res/: AuthPanel.class, ButtonPanel.class,
+	OptionsFrame.class, VncCanvas.class, VncViewer.class,
+	VncViewer.jar: Updated Java viewer.
+
+2002-04-25 04:32  const
+
+	* winvnc/: tableinitcmtemplate.cpp, vncClient.cpp, vncDesktop.cpp,
+	vncEncoder.cpp, vncServer.cpp, vncService.cpp: Improved logging on
+	errors, code cleanups.
+
+2002-04-25 04:29  const
+
+	* winvnc/: d3des.c, translate.cpp, vncauth.c: Minor cleanups to
+	eliminate compilation warnings.
+
+2002-04-25 04:28  const
+
+	* winvnc/: vncHTTPConnect.cpp, vncSockConnect.cpp: Minor bugfixes
+	to improve handling of special pseudo-connections used to exit from
+	accept() system calls.
+
+2002-04-24 20:37  const
+
+	* winvnc/vncProperties.cpp: Real passwords are never placed into
+	the password text control in the WinVNC Properties dialog any more.
+	This should prevent grabbing plain-text passwords from that text
+	control.
+
+2002-04-09 00:31  const
+
+	* winvnc/vncHTTPConnect.cpp: Improved HTML pages and templates for
+	the built-in HTTP server.
+
+2002-04-02 06:05  const
+
+	* vncviewer/ClientConnection.cpp: Fixed a problem with listening
+	viewer: initiating multiple non-shared connections crashed the
+	viewer application.
+
+2002-04-02 06:03  const
+
+	* vncviewer/: ClientConnection.cpp, Daemon.cpp, Flasher.cpp: Fixed
+	a problem with reporting error messages in the listening viewer,
+	appeared when the sources were compiled with Borland C++ 5.5.
+
+2002-04-01 10:59  const
+
+	* vncviewer/Log.cpp, winvnc/Log.cpp: Writing log files with
+	MSDOS/Windows-style end-of-lines instead of Unix-style single
+	'\n's.
+
+2002-04-01 10:45  const
+
+	* winvnc/Log.cpp: Now WinVNC should be able to save backup copies
+	of log files under Win95/98/Me.
+
+2002-03-29 03:13  const
+
+	* winvnc/: vncBuffer.cpp, vncEncodeCoRRE.cpp, vncEncodeCoRRE.h,
+	vncEncodeHexT.cpp, vncEncodeHexT.h, vncEncodeRRE.cpp,
+	vncEncodeRRE.h, vncEncodeTight.cpp, vncEncodeTight.h,
+	vncEncodeZlib.cpp, vncEncodeZlib.h, vncEncodeZlibHex.cpp,
+	vncEncodeZlibHex.h, vncEncoder.cpp, vncEncoder.h: Fixed WinVNC
+	crashes on reporting zero statistics.  Fixed incorrect statistics
+	in the Tight encoder.  Added a call to log statistics when new
+	requested encoder destroys old encoder object.	Minor code
+	cleanups.
+
+2002-03-22 03:52  const
+
+	* winvnc/vncHTTPConnect.cpp: Fixed a problem with built-in HTTP
+	server appeared in the previous version.
+
+2002-03-21 01:24  const
+
+	* winvnc/vncDesktop.cpp: A fix to restore screen resolution
+	correctly, from Boyd Ebsworthy.
+
+2002-03-20 11:20  const
+
+	* winvnc/vncHTTPConnect.cpp: Made client HTTP thread detached.
+
+2002-03-20 10:31  const
+
+	* winvnc/: vncHTTPConnect.cpp, vncHTTPConnect.h: Fixed problem with
+	I/O blocking in built-in HTTP server that prevented concurrent
+	client connections.
+
+2002-03-20 10:27  const
+
+	* winvnc/zlib/: zconf.h, zlib.def, zlib.rc: Zlib library updates,
+	version 1.1.3 to 1.1.4.
+
+2002-03-07 09:29  const
+
+	* winvnc/res/: VncCanvas.class, VncViewer.jar: Java viewer update.
+
+2002-03-04 12:28  const
+
+	* TightVNC.iss: Creating associations for .vnc files in the
+	installer.
+
+2002-03-04 12:27  const
+
+	* winvnc/: WinVNC.cpp, WinVNC.h, vncMenu.cpp, vncService.cpp,
+	vncService.h: The winvnc's -connect command-line option now accepts
+	a display number after a hostname.
+
+2002-03-04 10:37  const
+
+	* BUILDING.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed.
+
+2002-03-04 10:12  const
+
+	* winvnc/: WinVNC.dsp, WinVNC.rc, resource.h, vncHTTPConnect.cpp,
+	res/AuthPanel.class, res/ButtonPanel.class,
+	res/ClipboardFrame.class, res/OptionsFrame.class,
+	res/RfbProto.class, res/VncCanvas.class, res/VncViewer.class,
+	res/VncViewer.jar: Updated version of the Java viewer.
+
+2002-02-07 04:54  const
+
+	* vncviewer/ClientConnection.cpp, vncviewer/rfbproto.h,
+	vncviewer/stdhdrs.h, winvnc/rfbproto.h, winvnc/vncClient.cpp: Added
+	support for mouse wheel events. Such events are represented as
+	button4 and button5 presses with immediate releases.
+
+2001-11-27 22:43  const
+
+	* BUILDING.txt, README.txt: Version strings and TightVNC intro were
+	changed.
+
+2001-11-27 06:34  const
+
+	* TightVNC.iss: Installation script updated for 1.2.2 version.
+
+2001-11-22 03:10  const
+
+	* winvnc/VSocket.cpp: Copyright string made correct.
+
+2001-10-30 10:33  const
+
+	* vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc, winvnc/resource.h,
+	winvnc/vncAdvancedProperties.cpp, winvnc/vncProperties.cpp,
+	winvnc/vncServer.cpp, winvnc/vncServer.h,
+	winvnc/VNCHooks/VNCHooks.rc: New EnableHTTPDaemon registry setting
+	to disable HTTP daemon, and corresponding checkbox in Advanced
+	Preferences dialog (this change was inspired by "AllowHTTP" patch
+	made by Ph Marek). Layout changes in the Advanced Preferences
+	dialog, and changes in version strings, version 1.2.2.
+
+2001-10-29 06:07  const
+
+	* winvnc/: VSocket.cpp, VSocket.h, vncClient.cpp,
+	vncEncodeTight.cpp, vncEncodeZlib.cpp, vncEncodeZlibHex.cpp,
+	vncEncoder.cpp: A fix for a long-standing Win9x resource
+	consumption problem. Now the server thread does not use blocking
+	I/O, and therefore is always ready to process messages both from
+	the VNCHooks DLL.
+
+2001-10-10 23:35  const
+
+	* winvnc/WinVNC.rc: Typos fixed.
+
+2001-09-24 05:46  const
+
+	* TightVNC.iss: LICENSE.txt renamed to LICENCE.txt.
+
+2001-09-24 02:16  const
+
+	* vncviewer/ClientConnection.cpp: Changes in exception handling.
+	Now warning exceptions causing disconnects are reported to user,
+	except for the case when a user has closed the viewer window. These
+	changes also should fix the problem with Borland C++ compilation
+	resulting vncviewer crashes after closing one connection and
+	opening another one, e.g. in the listen mode.
+
+2001-09-16 08:40  const
+
+	* BUILDING.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, more text in
+	the "Reverse connection" WinVNC dialog added.
+
+2001-09-16 08:36  const
+
+	* vncviewer/VNCOptions.cpp: New -encoding command-line option has
+	been implemented in vncviewer.
+
+2001-09-16 08:34  const
+
+	* winvnc/vncConnDialog.cpp: Modified patch for WinVNC from Steve
+	Kann, to support reverse connections on ports other than 5500.
+
+2001-09-15 04:16  const
+
+	* TightVNC.iss: DOS-style end-of-lines removed.
+
+2001-09-15 04:15  const
+
+	* TightVNC.iss: Configuration file for Inno Setup packaging.
+
+2001-09-10 02:20  const
+
+	* LICENCE.txt: LICENSE.txt renamed back to LICENCE.txt. :-)
+
+2001-09-10 02:17  const
+
+	* LICENCE.txt: LICENCE.txt renamed to LICENSE.txt.
+
+2001-09-09 01:18  const
+
+	* vncviewer/VNCOptions.cpp: Now viewer should support -noshared
+	option.
+
+2001-09-04 11:33  const
+
+	* vncviewer/res/idr_tray.ico: Forgot to replace this icon with new
+	icon file.
+
+2001-08-15 00:56  const
+
+	* vncviewer/res/tightvnc.bmp, vncviewer/res/tightvnc48.bmp,
+	vncviewer/res/vncviewer.ico, winvnc/res/WinVNC.ico,
+	winvnc/res/ico00001.ico, winvnc/res/icon1.ico,
+	winvnc/res/tightvnc.bmp: New icons and modified logos.
+
+2001-08-14 08:59  const
+
+	* vncviewer/res/cursor1.cur, vncviewer/res/idr_tray.ico,
+	vncviewer/res/nocursor.cur, vncviewer/res/tightvnc.bmp,
+	vncviewer/res/tightvnc48.bmp, vncviewer/res/vncviewer.ico,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc, winvnc/res/WinVNC.ico,
+	winvnc/res/ico00001.ico, winvnc/res/icon1.ico,
+	winvnc/res/tightvnc.bmp: Version strings changed, new logo and
+	icons added, a number of dialogs changed to include icons, version
+	info etc.
+
+2001-08-14 08:53  const
+
+	* BUILDING.txt, README.txt, vncviewer/AboutBox.cpp,
+	vncviewer/AboutBox.h, vncviewer/AuthDialog.cpp,
+	vncviewer/AuthDialog.h, vncviewer/COPYING.txt,
+	vncviewer/ClientConnection.cpp, vncviewer/ClientConnection.h,
+	vncviewer/ClientConnectionClipboard.cpp,
+	vncviewer/ClientConnectionCoRRE.cpp,
+	vncviewer/ClientConnectionCopyRect.cpp,
+	vncviewer/ClientConnectionCursor.cpp,
+	vncviewer/ClientConnectionFile.cpp,
+	vncviewer/ClientConnectionFullScreen.cpp,
+	vncviewer/ClientConnectionHextile.cpp,
+	vncviewer/ClientConnectionRRE.cpp,
+	vncviewer/ClientConnectionRaw.cpp,
+	vncviewer/ClientConnectionTight.cpp,
+	vncviewer/ClientConnectionZlib.cpp,
+	vncviewer/ClientConnectionZlibHex.cpp, vncviewer/Daemon.cpp,
+	vncviewer/Daemon.h, vncviewer/Exception.cpp, vncviewer/Exception.h,
+	vncviewer/Flasher.cpp, vncviewer/Flasher.h, vncviewer/KeyMap.cpp,
+	vncviewer/KeyMap.h, vncviewer/Log.cpp, vncviewer/Log.h,
+	vncviewer/MRU.cpp, vncviewer/MRU.h, vncviewer/SessionDialog.cpp,
+	vncviewer/SessionDialog.h, vncviewer/VNCOptions.cpp,
+	vncviewer/VNCOptions.h, vncviewer/VNCviewerApp.cpp,
+	vncviewer/VNCviewerApp.h, vncviewer/VNCviewerApp32.cpp,
+	vncviewer/VNCviewerApp32.h, vncviewer/keysymdef.h, vncviewer/rfb.h,
+	vncviewer/stdhdrs.cpp, vncviewer/stdhdrs.h, vncviewer/vncauth.c,
+	vncviewer/vncauth.h, vncviewer/vncviewer.cpp,
+	vncviewer/vncviewer.h, winvnc/COPYING.txt, winvnc/MinMax.cpp,
+	winvnc/MinMax.h, winvnc/RectList.cpp, winvnc/RectList.h,
+	winvnc/VSocket.cpp, winvnc/VSocket.h, winvnc/VTypes.h,
+	winvnc/WinVNC.cpp, winvnc/WinVNC.h, winvnc/keysymdef.h,
+	winvnc/rfb.h, winvnc/rfbproto.h, winvnc/stdhdrs.cpp,
+	winvnc/stdhdrs.h, winvnc/translate.h, winvnc/vncAbout.cpp,
+	winvnc/vncAbout.h, winvnc/vncAcceptDialog.cpp,
+	winvnc/vncAcceptDialog.h, winvnc/vncBuffer.cpp, winvnc/vncBuffer.h,
+	winvnc/vncClient.cpp, winvnc/vncClient.h, winvnc/vncConnDialog.cpp,
+	winvnc/vncConnDialog.h, winvnc/vncCorbaConnect.h,
+	winvnc/vncDesktop.cpp, winvnc/vncDesktop.h,
+	winvnc/vncEncodeCoRRE.cpp, winvnc/vncEncodeCoRRE.h,
+	winvnc/vncEncodeHexT.cpp, winvnc/vncEncodeHexT.h,
+	winvnc/vncEncodeRRE.cpp, winvnc/vncEncodeRRE.h,
+	winvnc/vncEncodeTight.cpp, winvnc/vncEncodeTight.h,
+	winvnc/vncEncodeZlib.cpp, winvnc/vncEncodeZlib.h,
+	winvnc/vncEncodeZlibHex.cpp, winvnc/vncEncodeZlibHex.h,
+	winvnc/vncEncoder.cpp, winvnc/vncEncoder.h,
+	winvnc/vncHTTPConnect.cpp, winvnc/vncHTTPConnect.h,
+	winvnc/vncInstHandler.cpp, winvnc/vncInstHandler.h,
+	winvnc/vncKeymap.cpp, winvnc/vncKeymap.h, winvnc/vncMenu.cpp,
+	winvnc/vncMenu.h, winvnc/vncPasswd.h, winvnc/vncProperties.cpp,
+	winvnc/vncProperties.h, winvnc/vncRegion.cpp, winvnc/vncRegion.h,
+	winvnc/vncServer.cpp, winvnc/vncServer.h, winvnc/vncService.cpp,
+	winvnc/vncService.h, winvnc/vncSockConnect.cpp,
+	winvnc/vncSockConnect.h, winvnc/vncTimedMsgBox.cpp,
+	winvnc/vncTimedMsgBox.h, winvnc/vncauth.c, winvnc/vncauth.h,
+	winvnc/VNCHooks/SharedData.cpp, winvnc/VNCHooks/SharedData.h,
+	winvnc/VNCHooks/VNCHooks.cpp, winvnc/VNCHooks/VNCHooks.h: Version
+	strings changed, a link to TightVNC homepage added to comments at
+	top of each file.
+
+2001-08-09 07:09  const
+
+	* winvnc/: Makefile.bcc32, VNCHooks/Makefile.bcc32,
+	VNCHooks/SharedData.cpp, VNCHooks/SharedData.h: DOS-style
+	end-of-lines converted to Unix-style ones.
+
+2001-08-09 06:12  const
+
+	* vncviewer/: Makefile.bcc32, res/resource.h: DOS-style
+	end-of-lines converted to Unix-style ones.
+
+2001-08-09 03:48  const
+
+	* winvnc/vncDesktop.cpp: DrawIconEx flags corrected, now custom
+	cursors can be shown properly under both WinNT and Win95/Win98,
+	regardless of settings related to local cursor support.
+
+2001-08-05 05:37  const
+
+	* winvnc/vncClient.cpp: Conflicts between VNC, TightVNC and
+	TridiaVNC hopefully resolved.
+
+2001-08-05 05:35  const
+
+	* winvnc/Makefile.bcc32: New file, vncAdvancedProperties.cpp.
+
+2001-08-05 05:34  const
+
+	* winvnc/WinVNC.rc: DS_SETFOREGROUND flags removed -- not
+	understood by Borland C++ 5.5.
+
+2001-08-05 03:57  const
+
+	* winvnc/: History.txt, Log.cpp, Log.h, WinVNC.rc, rfbproto.h,
+	vncAcceptDialog.cpp, vncAcceptDialog.h, vncAdvancedProperties.cpp,
+	vncBuffer.cpp, vncClient.cpp, vncDesktop.cpp, vncDesktop.h,
+	vncEncodeCoRRE.cpp, vncEncodeHexT.cpp, vncEncodeRRE.cpp,
+	vncHTTPConnect.cpp, vncMenu.cpp, vncProperties.cpp,
+	vncProperties.h, vncServer.cpp, vncServer.h, vncService.cpp,
+	vncService.h: Integrated changes from standard VNC 3.3.3r9.
+
+2001-08-05 02:45  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	Flasher.cpp, History.txt, rfbproto.h: Integrated changes from
+	standard VNC 3.3.3r9.
+
+2001-08-05 02:08  const
+
+	* winvnc/: Log.cpp, Log.h, WinVNC.dsp, WinVNC.rc, resource.h,
+	vncAcceptDialog.cpp, vncAcceptDialog.h, vncAdvancedProperties.cpp,
+	vncAdvancedProperties.h, vncClient.cpp, vncMenu.cpp, vncMenu.h,
+	vncProperties.cpp, vncProperties.h, vncServer.cpp, vncServer.h,
+	vncService.cpp, res/ico00001.ico: Integrated Robert Ragno's
+	Advanced Properties dialog and AllowNoPassword, from TridiaVNC CVS.
+
+2001-07-29 11:05  const
+
+	* BUILDING.txt, README.txt: Version strings changed.
+
+2001-07-29 11:04  const
+
+	* winvnc/: vncBuffer.cpp, vncBuffer.h, vncClient.cpp, vncClient.h,
+	vncDesktop.cpp, vncDesktop.h, vncEncoder.cpp, vncEncoder.h,
+	vncService.cpp: RichCursor encoding is now fully supported. Code
+	implementing cursor shape updates has been reorganized, large parts
+	were rewritten; this should be the final version of the "local
+	cursor" feature. Besides that, code cleanups in many places.
+
+2001-07-18 09:26  const
+
+	* vncviewer/ClientConnectionCursor.cpp: Bug fixed: vncviewer used
+	to set cursor hotspot incorrectly on XCursor and RichCursor
+	updates.
+
+2001-03-13 04:52  const
+
+	* vncviewer/ClientConnectionCursor.cpp: Bugfix: local cursor
+	implementation allocated DC and bitmap on each cursor movement but
+	failed to free these recources. On Win95/98, after GDI resources
+	were exhausted, mouse movement leaved cursor trails on the screen.
+	Current fix allocates DC and bitmap only on cursor shape updates
+	and disposes them properly.
+
+2001-03-13 04:44  const
+
+	* build-bcc32.bat, vncviewer/omnithread/build-bcc32.bat,
+	vncviewer/res/build-bcc32.bat, winvnc/Makefile.bcc32,
+	winvnc/WinVNC.rc, winvnc/VNCHooks/Makefile.bcc32,
+	winvnc/omnithread/build-bcc32.bat: More porting to Borland C++ 5.5
+	compiler. Now build scripts and makefiles should work in Win95/98
+	environment.
+
+2001-03-11 10:13  const
+
+	* winvnc/: vncClient.cpp, vncClient.h: Started work to implement
+	cursor shape updates for every possible cursor shape. At this
+	moment, a skeleton for new implementation has been prepared, the
+	code has been re-organized, but basic functionality has remained
+	the same.
+
+2001-03-11 10:05  const
+
+	* vncviewer/Log.cpp, winvnc/Log.cpp: CORE SDI fixes applied to fix
+	buffer overflows reported 2001-01-29.
+
+2001-03-10 11:41  const
+
+	* winvnc/vncDesktop.cpp: The color depth is set to correct value in
+	24-bit truecolor mode.	Original WinVNC always used to set depth =
+	bitsPerPixel. This change notably improves performance of the Tight
+	encoder in both compression ratios and encoding/decoding speed.
+
+2001-03-10 11:35  const
+
+	* winvnc/vncEncodeTight.cpp: The "gradient" filter enabled again.
+
+2001-03-10 11:33  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnectionClipboard.cpp,
+	ClientConnectionCopyRect.cpp, ClientConnectionCursor.cpp,
+	ClientConnectionFile.cpp, ClientConnectionRaw.cpp,
+	ClientConnectionTight.cpp, ClientConnectionZlib.cpp,
+	ClientConnectionZlibHex.cpp, Daemon.cpp, Flasher.cpp, KeyMap.cpp,
+	Log.h, VNCOptions.cpp, VNCviewerApp.cpp, VNCviewerApp32.cpp,
+	vncviewer.cpp, vncviewer.h: The name of global variable "log"
+	changed to "vnclog".
+
+2001-03-10 09:06  const
+
+	* vncviewer/ClientConnectionTight.cpp: Bugfix: "gradient" filter
+	was broken in non-24-bit color depths.
+
+2001-03-10 09:05  const
+
+	* vncviewer/VNCOptions.cpp: Default preferred encoding is now
+	Tight.
+
+2001-03-10 09:05  const
+
+	* vncviewer/res/vncviewer.rc: Two version info blocks merged into
+	one record.
+
+2001-03-07 10:30  const
+
+	* winvnc/tabletranstemplate.cpp: Workaround for buggy Borland C++
+	5.5 compiler: pixel format translations from 24-bit colors worked
+	incorrectly when optimizations were enabled.
+
+2001-03-07 00:03  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	ClientConnectionCursor.cpp: "Local cursor" implementation now works
+	with scaling.
+
+2001-03-06 23:56  const
+
+	* winvnc/: vncEncodeTight.cpp, vncEncodeTight.h: Changes from
+	current Unix version ported to Win32 code.  Minor formatting
+	changes and code clean-ups.
+
+2001-03-05 11:00  const
+
+	* winvnc/vncEncodeTight.cpp: JPEG encoder worked incorrectly in
+	16bpp mode (bug found by Martin Granell).
+
+2001-03-05 10:03  const
+
+	* vncviewer/ClientConnectionTight.cpp: Minor clean-ups and tiny
+	formatting fix.
+
+2001-03-05 09:39  const
+
+	* BUILDING-bcc32.txt: MS-DOS end-of-line markers replaced with Unix
+	newlines.
+
+2001-03-05 09:32  const
+
+	* BUILDING-bcc32.txt, BUILDING.txt, build-bcc32.bat,
+	vncviewer/AuthDialog.h, vncviewer/ClientConnection.cpp,
+	vncviewer/ClientConnection.h,
+	vncviewer/ClientConnectionClipboard.cpp,
+	vncviewer/ClientConnectionCursor.cpp,
+	vncviewer/ClientConnectionTight.cpp,
+	vncviewer/ClientConnectionZlib.cpp, vncviewer/Daemon.h,
+	vncviewer/Exception.cpp, vncviewer/Exception.h,
+	vncviewer/Flasher.cpp, vncviewer/Flasher.h, vncviewer/KeyMap.h,
+	vncviewer/Log.h, vncviewer/MRU.h, vncviewer/Makefile.bcc32,
+	vncviewer/SessionDialog.h, vncviewer/VNCOptions.cpp,
+	vncviewer/VNCOptions.h, vncviewer/VNCviewerApp.h, vncviewer/rfb.h,
+	vncviewer/vncviewer.dsw, vncviewer/vncviewer.h,
+	vncviewer/libjpeg/Makefile.bcc32,
+	vncviewer/omnithread/build-bcc32.bat, vncviewer/omnithread/nt.cpp,
+	vncviewer/omnithread/nt.h, vncviewer/res/build-bcc32.bat,
+	vncviewer/res/vncviewer.rc, vncviewer/zlib/Makefile.bcc32,
+	winvnc/Log.h, winvnc/Makefile.bcc32, winvnc/VSocket.cpp,
+	winvnc/WinVNC.cpp, winvnc/stdhdrs.cpp, winvnc/stdhdrs.h,
+	winvnc/tableinitcmtemplate.cpp, winvnc/vncBuffer.cpp,
+	winvnc/vncBuffer.h, winvnc/vncClient.cpp, winvnc/vncDesktop.cpp,
+	winvnc/vncDesktopDX.cpp, winvnc/vncEncodeCoRRE.cpp,
+	winvnc/vncEncodeHexT.cpp, winvnc/vncEncodeRRE.cpp,
+	winvnc/vncEncodeTight.cpp, winvnc/vncEncodeZlib.cpp,
+	winvnc/vncEncodeZlibHex.cpp, winvnc/vncEncoder.cpp,
+	winvnc/vncEncoder.h, winvnc/vncHTTPConnect.cpp,
+	winvnc/vncKeymap.cpp, winvnc/vncMenu.cpp, winvnc/vncPasswd.h,
+	winvnc/vncProperties.cpp, winvnc/vncServer.cpp,
+	winvnc/vncService.cpp, winvnc/vncSockConnect.cpp,
+	winvnc/VNCHooks/Makefile.bcc32, winvnc/VNCHooks/SharedData.cpp,
+	winvnc/VNCHooks/SharedData.h, winvnc/VNCHooks/VNCHooks-bcc32.def,
+	winvnc/VNCHooks/VNCHooks-vc.def, winvnc/VNCHooks/VNCHooks.cpp,
+	winvnc/libjpeg/Makefile.bcc32, winvnc/omnithread/build-bcc32.bat,
+	winvnc/omnithread/omnithread/nt.cpp,
+	winvnc/omnithread/omnithread/nt.h, winvnc/zlib/Makefile.bcc32:
+	Finished porting to Borland C++ 5.5 compiler.  Global variable
+	"log" in WinVNC changed to "vnclog".  Proper cooperation between
+	threads in "local cursor" code.  Correct loading of configuration
+	files where "compresslevel" or "quality" setting were not set. 
+	Corrected path to libjpeg library in the vncviewer.dsw.  Minor code
+	clean-ups.
+
+2001-03-03 09:13  const
+
+	* winvnc/vncEncodeTight.cpp: Debugging code removed.  Minor
+	formatting changes.
+
+2001-02-08 10:44  const
+
+	* BUILDING.txt, README.txt: Notes on the status of release and
+	unpacking/building instructions.
+
+2001-02-08 10:17  const
+
+	* README.txt, vncviewer/AuthDialog.cpp,
+	vncviewer/ClientConnection.cpp, vncviewer/ClientConnection.h,
+	vncviewer/ClientConnectionCoRRE.cpp,
+	vncviewer/ClientConnectionCopyRect.cpp,
+	vncviewer/ClientConnectionCursor.cpp,
+	vncviewer/ClientConnectionRRE.cpp,
+	vncviewer/ClientConnectionTight.cpp, vncviewer/VNCOptions.cpp,
+	vncviewer/VNCOptions.h, vncviewer/VNCviewerApp.h,
+	vncviewer/VNCviewerApp32.cpp, vncviewer/rfbproto.h,
+	vncviewer/vncviewer.dsp, vncviewer/vncviewer.dsw,
+	vncviewer/libjpeg/jconfig.h, vncviewer/libjpeg/jmorecfg.h,
+	vncviewer/libjpeg/libjpeg.dsp, vncviewer/res/resource.h,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.dsp, winvnc/WinVNC.dsw,
+	winvnc/WinVNC.rc, winvnc/rfb.h, winvnc/rfbproto.h,
+	winvnc/vncAcceptDialog.cpp, winvnc/vncAcceptDialog.h,
+	winvnc/vncBuffer.cpp, winvnc/vncBuffer.h, winvnc/vncClient.cpp,
+	winvnc/vncClient.h, winvnc/vncDesktop.cpp, winvnc/vncDesktop.h,
+	winvnc/vncEncodeTight.cpp, winvnc/vncEncodeTight.h,
+	winvnc/vncEncoder.cpp, winvnc/vncEncoder.h,
+	winvnc/vncHTTPConnect.cpp, winvnc/vncMenu.cpp,
+	winvnc/vncProperties.cpp, winvnc/vncProperties.h,
+	winvnc/vncServer.cpp, winvnc/vncServer.h, winvnc/libjpeg/jconfig.h,
+	winvnc/libjpeg/libjpeg.dsp, winvnc/res/DesCipher.class: Features
+	from Unix version ported to Win32 source: "local cursor" feature,
+	JPEG compression, the code to split large rectangles in smarter way
+	etc.
+
+2001-01-05 11:07  const
+
+	* winvnc/vncEncodeTight.cpp: Changes from Unix version ported:
+	Constant sets for compression levels 0 and 1 changed.  Minor code
+	cleanups and optimizations.  Comments clarified, typos in comments
+	fixed.
+
+2001-01-05 10:38  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	ClientConnectionCursor.cpp, ClientConnectionTight.cpp: Preparing
+	for shape updates support (unfinished code).
+
+2000-12-08 15:31  const
+
+	* vncviewer/ClientConnectionTight.cpp: Bugfix from Unix source:
+	viewer crashed in rare situations after inflate() call when
+	decompressed data filled the whole output buffer but there was no
+	more input data.
+
+2000-12-07 07:09  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	ClientConnectionCursor.cpp, vncviewer.dsp: Preparing for
+	XCursor/RichCursor encodings implementation.
+
+2000-12-07 07:08  const
+
+	* winvnc/: vncEncodeTight.cpp, vncEncodeTight.h: Logging statistics
+	for Tight encoding.
+
+2000-11-30 11:52  const
+
+	* vncviewer/ClientConnection.cpp, vncviewer/VNCOptions.cpp,
+	vncviewer/VNCOptions.h, vncviewer/rfbproto.h,
+	vncviewer/res/resource.h, vncviewer/res/vncviewer.rc,
+	winvnc/rfbproto.h, winvnc/vncBuffer.cpp, winvnc/vncBuffer.h,
+	winvnc/vncClient.cpp, winvnc/vncEncodeTight.cpp,
+	winvnc/vncEncodeTight.h, winvnc/vncEncodeZlib.cpp,
+	winvnc/vncEncodeZlibHex.cpp, winvnc/vncEncoder.cpp,
+	winvnc/vncEncoder.h: Speed optimizations and configurable
+	compression levels.  Other code also ported from Unix sources.
+
+2000-11-15 13:09  const
+
+	* winvnc/: vncEncodeTight.cpp, vncEncodeTight.h: Compilation errors
+	fixed.
+
+2000-11-15 06:51  const
+
+	* vncviewer/ClientConnection.cpp, vncviewer/VNCOptions.h,
+	vncviewer/rfbproto.h, vncviewer/res/resource.h,
+	vncviewer/res/vncviewer.rc, winvnc/rfbproto.h,
+	winvnc/vncBuffer.cpp, winvnc/vncBuffer.h, winvnc/vncEncodeZlib.cpp:
+	Changes from TridiaVNC CVS have been merged in the source.
+
+2000-11-14 14:31  const
+
+	* vncviewer/rfbproto.h, winvnc/rfbproto.h,
+	winvnc/vncEncodeTight.cpp, winvnc/vncEncodeTight.h: Changes from
+	recent Unix sources partially integrated: tight encoder rewrites
+	and cleanups, preparing for configurable compression and cursor
+	shape encoding.
+
+2000-10-10 12:00  const
+
+	* vncviewer/ClientConnection.cpp, vncviewer/ClientConnection.h,
+	vncviewer/VNCOptions.h, vncviewer/rfbproto.h,
+	vncviewer/vncviewer.dsp, vncviewer/res/resource.h,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.dsp, winvnc/rfbproto.h,
+	winvnc/vncBuffer.cpp, winvnc/vncBuffer.h, winvnc/vncEncodeZlib.cpp,
+	winvnc/vncEncodeZlib.h, winvnc/res/icon1.ico: Merged with TridiaVNC
+	CVS tree.
+
+2000-10-10 11:18  const
+
+	* vncviewer/ClientConnectionZlibHex.cpp,
+	winvnc/vncEncodeZlibHex.cpp, winvnc/vncEncodeZlibHex.h: Initial
+	revision
+
+2000-10-05 02:35  const
+
+	* winvnc/vncEncodeTight.cpp: Compilation errors caused by
+	inaccurate porting from Unix source have been fixed.
+
+2000-10-01 13:46  const
+
+	* vncviewer/ClientConnectionTight.cpp, vncviewer/rfbproto.h,
+	winvnc/rfbproto.h, winvnc/vncEncodeTight.cpp,
+	winvnc/vncEncodeTight.h: Tight Encoding 1.1 ported from Unix
+	sources (not tested yet).
+
+2000-08-27 10:26  const
+
+	* vncviewer/: ClientConnection.cpp, ClientConnection.h,
+	VNCOptions.h, rfbproto.h, res/vncviewer.rc: Merged changes from
+	TridiaVNC.
+
+2000-08-27 08:00  const
+
+	* vncviewer/ClientConnection.cpp, vncviewer/ClientConnection.h,
+	vncviewer/ClientConnectionTight.cpp, vncviewer/VNCOptions.h,
+	vncviewer/rfbproto.h, vncviewer/vncviewer.dsp,
+	vncviewer/res/resource.h, vncviewer/res/vncviewer.rc,
+	winvnc/WinVNC.dsp, winvnc/rfbproto.h, winvnc/vncBuffer.cpp,
+	winvnc/vncBuffer.h, winvnc/vncEncodeTight.cpp,
+	winvnc/vncEncodeTight.h, winvnc/vncEncodeZlib.cpp,
+	winvnc/vncEncodeZlib.h, winvnc/res/icon1.ico: Tight encoding
+	release 1.0 added.
+
+2000-08-27 06:41  const
+
+	* BUILDING.txt, LICENCE.txt, README.txt, vncviewer/AboutBox.cpp,
+	vncviewer/AboutBox.h, vncviewer/AuthDialog.cpp,
+	vncviewer/AuthDialog.h, vncviewer/COPYING.txt,
+	vncviewer/ClientConnection.cpp, vncviewer/ClientConnection.h,
+	vncviewer/ClientConnectionClipboard.cpp,
+	vncviewer/ClientConnectionCoRRE.cpp,
+	vncviewer/ClientConnectionCopyRect.cpp,
+	vncviewer/ClientConnectionFile.cpp,
+	vncviewer/ClientConnectionFullScreen.cpp,
+	vncviewer/ClientConnectionHextile.cpp,
+	vncviewer/ClientConnectionRRE.cpp,
+	vncviewer/ClientConnectionRaw.cpp,
+	vncviewer/ClientConnectionZlib.cpp, vncviewer/Daemon.cpp,
+	vncviewer/Daemon.h, vncviewer/Exception.cpp, vncviewer/Exception.h,
+	vncviewer/Flasher.cpp, vncviewer/Flasher.h, vncviewer/History.txt,
+	vncviewer/KeyMap.cpp, vncviewer/KeyMap.h, vncviewer/Log.cpp,
+	vncviewer/Log.h, vncviewer/MRU.cpp, vncviewer/MRU.h,
+	vncviewer/SessionDialog.cpp, vncviewer/SessionDialog.h,
+	vncviewer/VNCOptions.cpp, vncviewer/VNCOptions.h,
+	vncviewer/VNCviewerApp.cpp, vncviewer/VNCviewerApp.h,
+	vncviewer/VNCviewerApp32.cpp, vncviewer/VNCviewerApp32.h,
+	vncviewer/keysymdef.h, vncviewer/rfb.h, vncviewer/rfbproto.h,
+	vncviewer/stdhdrs.cpp, vncviewer/stdhdrs.h, vncviewer/vncauth.c,
+	vncviewer/vncauth.h, vncviewer/vncviewer.cpp,
+	vncviewer/vncviewer.dsp, vncviewer/vncviewer.dsw,
+	vncviewer/vncviewer.h, vncviewer/omnithread/nt.cpp,
+	vncviewer/omnithread/nt.h, vncviewer/res/cursor1.cur,
+	vncviewer/res/idr_tray.ico, vncviewer/res/nocursor.cur,
+	vncviewer/res/resource.h, vncviewer/res/vncviewer.ico,
+	vncviewer/res/vncviewer.rc, winvnc/COPYING.txt, winvnc/History.txt,
+	winvnc/Log.cpp, winvnc/Log.h, winvnc/MinMax.cpp, winvnc/MinMax.h,
+	winvnc/RectList.cpp, winvnc/RectList.h, winvnc/VSocket.cpp,
+	winvnc/VSocket.h, winvnc/VTypes.h, winvnc/WinVNC.cpp,
+	winvnc/WinVNC.dsp, winvnc/WinVNC.dsw, winvnc/WinVNC.h,
+	winvnc/WinVNC.rc, winvnc/d3des.c, winvnc/keysymdef.h,
+	winvnc/resource.h, winvnc/rfb.h, winvnc/rfbproto.h,
+	winvnc/stdhdrs.cpp, winvnc/stdhdrs.h,
+	winvnc/tableinitcmtemplate.cpp, winvnc/tableinittctemplate.cpp,
+	winvnc/tabletranstemplate.cpp, winvnc/translate.cpp,
+	winvnc/translate.h, winvnc/vncAbout.cpp, winvnc/vncAbout.h,
+	winvnc/vncAcceptDialog.cpp, winvnc/vncAcceptDialog.h,
+	winvnc/vncBuffer.cpp, winvnc/vncBuffer.h, winvnc/vncClient.cpp,
+	winvnc/vncClient.h, winvnc/vncConnDialog.cpp,
+	winvnc/vncConnDialog.h, winvnc/vncCorbaConnect.h,
+	winvnc/vncDesktop.cpp, winvnc/vncDesktop.h,
+	winvnc/vncDesktopDX.cpp, winvnc/vncEncodeCoRRE.cpp,
+	winvnc/vncEncodeCoRRE.h, winvnc/vncEncodeHexT.cpp,
+	winvnc/vncEncodeHexT.h, winvnc/vncEncodeRRE.cpp,
+	winvnc/vncEncodeRRE.h, winvnc/vncEncodeZlib.cpp,
+	winvnc/vncEncodeZlib.h, winvnc/vncEncoder.cpp, winvnc/vncEncoder.h,
+	winvnc/vncHTTPConnect.cpp, winvnc/vncHTTPConnect.h,
+	winvnc/vncInstHandler.cpp, winvnc/vncInstHandler.h,
+	winvnc/vncKeymap.cpp, winvnc/vncKeymap.h, winvnc/vncMenu.cpp,
+	winvnc/vncMenu.h, winvnc/vncPasswd.h, winvnc/vncProperties.cpp,
+	winvnc/vncProperties.h, winvnc/vncRegion.cpp, winvnc/vncRegion.h,
+	winvnc/vncServer.cpp, winvnc/vncServer.h, winvnc/vncService.cpp,
+	winvnc/vncService.h, winvnc/vncSockConnect.cpp,
+	winvnc/vncSockConnect.h, winvnc/vncTimedMsgBox.cpp,
+	winvnc/vncTimedMsgBox.h, winvnc/vncauth.c, winvnc/vncauth.h,
+	winvnc/VNCHooks/VNCHooks.cpp, winvnc/VNCHooks/VNCHooks.def,
+	winvnc/VNCHooks/VNCHooks.h, winvnc/VNCHooks/VNCHooks.rc,
+	winvnc/omnithread/omnithread/nt.cpp,
+	winvnc/omnithread/omnithread/nt.h, winvnc/res/DesCipher.class,
+	winvnc/res/WinVNC.ico, winvnc/res/icon1.ico, winvnc/zlib/zconf.h,
+	winvnc/zlib/zlib.def, winvnc/zlib/zlib.rc: Initial revision
+
+2000-08-27 06:41  const
+
+	* vncviewer/LICENCE.txt, vncviewer/ToDo.txt, vncviewer/d3des.c,
+	vncviewer/d3des.h, vncviewer/fred,
+	vncviewer/omnithread/omnithread.dsp,
+	vncviewer/omnithread/omnithread.h, vncviewer/res/toolbar1.bmp,
+	vncviewer/zlib/zlib.dsp, winvnc/BUILDING.txt, winvnc/LICENCE.txt,
+	winvnc/VNCHooks_Settings.reg, winvnc/d3des.h,
+	winvnc/VNCHooks/VNCHooks.dsp, winvnc/VNCHooks/resource.h,
+	winvnc/omnithread/omnithread.dsp, winvnc/omnithread/omnithread.h,
+	winvnc/zlib/zlib.dsp: Imported sources
+

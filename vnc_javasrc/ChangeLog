@@ -1,0 +1,541 @@
+2003-07-24 08:33  const_k
+
+	* VncViewer.java: Minor fix to move the keyboard focus to VncCanvas
+	on opening the desktop.
+
+2003-07-23 21:51  const_k
+
+	* README: Version string changed, version 1.2.9.
+
+2003-03-02 02:54  const_k
+
+	* RfbProto.java: Passing through X keysyms for foreign currencies,
+	a modified patch from Bernd Krueger-Knauber.
+
+2003-01-22 06:35  const_k
+
+	* README: Version string changed, version 1.2.8.
+
+2002-11-13 09:50  const_k
+
+	* README: Version string changed, version 1.2.7.
+
+2002-11-12 01:21  const_k
+
+	* MANIFEST.MF, Makefile: Added a MANIFEST file with a Main-Class
+	statement to allow easy execution of the JAR file, using java -jar
+	command-line option.
+
+2002-11-12 01:15  const_k
+
+	* index.html: Applet height increased by 32 pixels.
+
+2002-11-11 23:34  const_k
+
+	* Makefile: Extra .vnc files have been removed, having just
+	index.vnc should be enough.
+
+2002-11-11 23:33  const_k
+
+	* index.html, index.vnc: Extra .vnc files have been removed, having
+	just index.vnc should be enough. Also, an example HTML page has
+	been prepared, to simplify installation under a standalone Web
+	server.
+
+2002-11-11 23:13  const_k
+
+	* README: Documented three ways to use the Java viewer, in the
+	Installation section.
+
+2002-11-07 05:12  const_k
+
+	* VncCanvas.java, VncViewer.java: Minor change to preserve keyboard
+	focus in VncCanvas after resizing the frame, when running in a
+	separate window.
+
+2002-11-06 08:49  const_k
+
+	* Makefile, README, ReloginPanel.java, VncViewer.java: Implemented
+	new buttons "Login again" and "Close window" near the disconnect or
+	error messages in the applet mode, and introduced new "Offer
+	Relogin" parameter to control this improvement. Thanks to Peter
+	Astrand for the initial version of the "Login again" patch.
+
+2002-10-29 10:26  const_k
+
+	* VncCanvas.java: Don't defer update requests if there is some data
+	to receive, or if the last update included a PointerPos message.
+
+2002-10-29 09:06  const_k
+
+	* HTTPConnectSocket.java, HTTPConnectSocketFactory.java, Makefile:
+	Support for connections via HTTP proxies using HTTP CONNECT method.
+	 Most likely, this will not work in applet mode, due to security
+	restrictions in JVMs.
+
+2002-10-29 09:03  const_k
+
+	* OptionsFrame.java, RfbProto.java, VncCanvas.java: Added support
+	for new CursorPos pseudo-encoding which allows to transmit pointer
+	position from server to clients.
+
+2002-09-24 14:29  const_k
+
+	* RecordingFrame.java: A patch from Harmen van der Wal -- "a
+	workaround for AFAIK a rare (Blackdown 1.1.7)
+	SecurityManager.checkPropertyAccess() bug, that would otherwise be
+	fatal for an unprivileged applet".
+
+2002-09-24 14:23  const_k
+
+	* RfbProto.java, VncViewer.java: Enhancements to the exception
+	handling mechanisms, a patch from Harmen van der Wal.
+
+2002-09-24 14:01  const_k
+
+	* Makefile, README, RfbProto.java, SocketFactory.java,
+	VncViewer.java: A patch from Harmen van der Wal, which makes it
+	easy to plug-in alternative transport methods to the viewer. It can
+	be useful for for things like HTTP tunneling, SSL support, or
+	perhaps for integration with "zebedee", ssh or other tunneling
+	mechanisms.
+
+2002-09-23 18:52  const_k
+
+	* VncCanvas.java: Reducing max frame size by 30 pixels in each
+	direction, to leave some place on the screen, e.g. for the menu bar
+	on Macintosh or the task bar on Windows; a patch from Steve Kann.
+
+2002-08-27 05:23  const_k
+
+	* README: Version string changed, version 1.2.6.
+
+2002-08-04 09:39  const
+
+	* README, RfbProto.java, VncCanvas.java: Version string changed,
+	version 1.2.5. Copyrights updated.
+
+2002-07-05 01:37  const
+
+	* RfbProto.java, VncCanvas.java, VncViewer.java: More robust and
+	correct methods to determine if Zlib- or Tight-encoded data should
+	be saved Raw-encoded or re-compressed in recorded sessions. Also,
+	always emit warnings in the Java console if such recoding was
+	necessary.
+
+2002-07-05 01:26  const
+
+	* README: Minor documentation addition.
+
+2002-07-04 23:17  const
+
+	* OptionsFrame.java: JPEG quality setting should be enabled in the
+	Options frame only in the 24-bit color mode.
+
+2002-07-04 23:02  const
+
+	* OptionsFrame.java: Unused temporary hack was removed.
+
+2002-07-03 13:25  const
+
+	* README: Some documentation on RFB session recording.
+
+2002-07-03 12:43  const
+
+	* RfbProto.java: Forgot to remove debugging output.
+
+2002-07-03 12:38  const
+
+	* RfbProto.java, VncCanvas.java: Re-compressing Tight-encoded
+	rectangles when recorded session starts after the connection was
+	established, to make it possible to decompress the data without
+	knowing prior pixel data.
+
+2002-07-03 07:11  const
+
+	* VncViewer.java, RfbProto.java, VncCanvas.java: Special handling
+	of Zlib-encoded rectangles -- they are written either Zlib-encoded
+	if it's a beginning of RFB session, or Raw encoded otherwise. This
+	is needed to make sure it will be possible to decode saved data
+	without knowing the state of zlib compression stream used by the
+	encoder.
+
+2002-07-03 03:49  const
+
+	* ButtonPanel.java, RecordingFrame.java, VncViewer.java: The
+	"Record" button now appears only if current SecurityManager allows
+	access to the local filesystem.  Exceptions after an intentional
+	disconnect are not shown in the applet panel or window any more.
+
+2002-07-03 02:40  const
+
+	* RecordingFrame.java, RfbProto.java, VncCanvas.java,
+	VncViewer.java: Implement dynamic toggling of session recording.
+
+2002-07-02 23:34  const
+
+	* VncViewer.java: Preparing to implement dynamic toggling of
+	session recording.  The "Save Session" parameter was removed.
+
+2002-06-30 22:44  const
+
+	* RecordingFrame.java: Fixed copyright string.
+
+2002-06-12 11:45  const
+
+	* ButtonPanel.java, RecordingFrame.java, VncViewer.java: A simple
+	hack to make the RecordingFrame work, at least when the recording
+	is being turned on before making the connection. The RecordingFrame
+	is still not very useful but at least does allow to record a whole
+	session in one file.
+
+2002-06-12 05:03  const
+
+	* ButtonPanel.java, Makefile, RecordingFrame.java, VncViewer.java:
+	Added new "Record" button and a GUI to control recording of
+	sessions in FBS files.
+
+2002-06-04 11:01  const
+
+	* Makefile, OptionsFrame.java, RfbProto.java, SessionRecorder.java,
+	VncCanvas.java, VncViewer.java: Implemented experimental feature to
+	save RFB sessions in FBS files compatible with rfbproxy, and the
+	new "Save Session" parameter where a user can set a file name.
+	Color format requested from the server was changed to little-endian
+	to make saved sessions similar to ones written by the VNC
+	Reflector, and to make colors compatible with RFB Session Player.
+
+2002-06-03 22:55  const
+
+	* VncCanvas.java: Cleanups in "throws" statements.
+
+2002-06-03 22:50  const
+
+	* VncCanvas.java: Minor cleanup in comment.
+
+2002-06-03 22:37  const
+
+	* VncCanvas.java: Major Code cleanup: each decoder was moved from
+	the processNormalProtocol() method to a separate function.
+
+2002-06-03 22:19  const
+
+	* README: Minor cleanup.
+
+2002-05-23 09:58  const
+
+	* README, VncViewer.java: New "ENCPASSWORD" parameter, modified
+	patch from Peter Astrand.
+
+2002-05-19 01:03  const
+
+	* RfbProto.java, VncCanvas.java, VncViewer.java: Throwing Exception
+	instead of IOException if that was not an I/O error.
+
+2002-05-18 23:38  const
+
+	* RfbProto.java: Applied patch from Peter Astrand to fix problems
+	with Swedish keys and broken JVMs.
+
+2002-04-25 04:51  const
+
+	* README: Updated version strings for version 1.2.4.
+
+2002-04-25 04:49  const
+
+	* README: Documented new feature to refresh remote desktop in the
+	view-only mode using "R"/"r" keys.
+
+2002-04-23 06:02  const
+
+	* ButtonPanel.java: Bugfix: keyboard focus could be set
+	incorrectly. It was returned to desktop even when windows such as
+	Options or Clipboard were created.  This looked like new windows
+	had appeared behind the authenticator or desktop window, if the
+	viewer itself was running in a separate window.
+
+2002-04-09 12:10  const
+
+	* VncViewer.java: Minor bugfix to prevent the "Refresh" button to
+	disappear after the "Disconnect" button changes to "Hide desktop".
+
+2002-04-09 12:05  const
+
+	* VncViewer.java: Previous bugfix was broken.
+
+2002-04-09 12:01  const
+
+	* VncViewer.java: Minor bugfix to prevent dumping exceptions on
+	pressing "R"/"r" keys over disconnected desktop.
+
+2002-04-09 11:53  const
+
+	* VncCanvas.java: Now "R"/"r" keys can be used to request screen
+	updates in view-only mode.
+
+2002-04-08 12:17  const
+
+	* README: "Show offline desktop" parameter documented.
+
+2002-04-08 12:12  const
+
+	* OptionsFrame.java, VncCanvas.java, VncViewer.java: "Show
+	Controls" setting moved from OptionsFrame to VncViewer class.
+
+2002-04-08 12:04  const
+
+	* ButtonPanel.java, VncViewer.java: New "Show Offline Desktop"
+	parameter allowing the disktop to be still displayed even after the
+	remote side closed connection.
+
+2002-04-02 09:12  const
+
+	* AuthPanel.java: Disabling the password input field on activating
+	connections.
+
+2002-04-02 07:38  const
+
+	* VncViewer.java: Reporting more meaningful messages on errors.
+
+2002-03-25 07:41  const
+
+	* VncViewer.java: A cosmetic change.
+
+2002-03-07 09:27  const
+
+	* VncCanvas.java: Fixed bug causing NullPointerException in
+	view-only mode with disabled button panel.
+
+2002-02-14 07:20  const
+
+	* ButtonPanel.java, VncCanvas.java: Made the "Ctrl-Alt-Del" button
+	disabled in the view-only mode.
+
+2002-02-14 07:19  const
+
+	* VncViewer.java: Removed calls printing debugging output.
+
+2002-02-12 15:02  const
+
+	* README, VncCanvas.java, VncViewer.java: Added new parameters
+	"Defer screen updates", "Defer cursor updates", "Defer update
+	requests", documented in README.
+
+2002-02-12 13:03  const
+
+	* VncCanvas.java: Made "Restricted colors" option dynamic.
+
+2002-02-12 12:36  const
+
+	* VncCanvas.java, VncViewer.java: Code cleanups, preparing to make
+	"Restricted colors" option dynamic.
+
+2002-02-12 09:32  const
+
+	* ButtonPanel.java, OptionsFrame.java, README, RfbProto.java,
+	VncCanvas.java, VncViewer.java: Documented applet parameters,
+	updated copyright strings.
+
+2002-02-12 05:53  const
+
+	* VncCanvas.java: Solved all issues with JPEG image loading.  Added
+	more comments in the source code.
+
+2002-02-12 04:13  const
+
+	* OptionsFrame.java, VncCanvas.java: Solved problems with
+	asynchronous JPEG image loading, although the solution is not ideal
+	yet. Now the ImageObserver interface is used only to track loading
+	of JPEG images, and is not used with drawImage() method calls. 
+	Draft scaling implementation appeared in previous CVS commit was
+	temporarily removed in this revision.
+
+2002-02-08 04:06  const
+
+	* OptionsFrame.java, VncCanvas.java: Simple and inefficient scaling
+	implementation, new "Scaling Factor" parameter.
+
+2002-02-07 10:20  const
+
+	* ButtonPanel.java, VncViewer.java: Preventing authentication
+	retries when the PASSWORD parameter is used.  Closing windows and
+	disconnecting on the applet shutdown.  Terminating the application
+	properly on closing the authentication window.	Packing the window
+	on reporting errors when in a separate window; this is necessary
+	because it's possible that the window was empty.  Disconnecting on
+	fatal errors.  Always forcing the keyboard focus go to the desktop
+	on activating the connection.  Code re-organizations and cleanups
+	e.g. new tryAuthenticate() method.
+
+2002-01-30 10:25  const
+
+	* VncCanvas.java: The frame size now should be limited by the
+	screen size.  JPEG support improved, but drawing is still not
+	reliable.  Minor code cleanups -- methods re-arranged.
+
+2002-01-30 10:22  const
+
+	* OptionsFrame.java: A small piece of debugging code removed.
+
+2002-01-30 05:47  const
+
+	* OptionsFrame.java, RfbProto.java, VncCanvas.java: Drawing model
+	was changed again; now usual off-screen Image is used for
+	double-buffering instead of MemoryImageSource.	Preliminary
+	implementation of JPEG support in the Tight decoder.  New "JPEG
+	image quality" parameter and corresponding item in the Options
+	frame.
+
+2002-01-24 22:49  const
+
+	* VncCanvas.java: Bugfixes in the Tight decoder: recent changes
+	broke 8-bit color mode.  Bugfixes in the XCursor encoding support:
+	cursor colors were interpreted incorrectly.
+
+2002-01-14 13:11  const
+
+	* VncCanvas.java: 24-bit Tight decoder finished. Now it parses
+	24-bit (not 32-bit!) color samples correctly, and is able to decode
+	data pre-processed with the "Gradient" filter.
+
+2002-01-14 10:46  const
+
+	* VncCanvas.java: Preliminary working support for 24-bit colors in
+	the Tight decoder.
+
+2002-01-14 06:00  const
+
+	* OptionsFrame.java: Color format was not set correctly.
+
+2002-01-14 05:32  const
+
+	* RfbProto.java, VncCanvas.java: Code cleanups: changes in
+	rfb.is.read() and rfb.is.readFully() calls.
+
+2002-01-14 05:18  const
+
+	* AuthPanel.java, VncCanvas.java, VncViewer.java: Support for
+	24-bit color in RichCursor encoding.
+
+2002-01-12 16:11  const
+
+	* OptionsFrame.java, VncCanvas.java: Support for 24-bit colors. At
+	this moment, all decoders support this color mode, with two
+	exceptions of Tight and RichCursor.
+
+2002-01-12 15:57  const
+
+	* RfbProto.java: Removed a piece of code used for debugging.
+
+2002-01-12 10:23  const
+
+	* OptionsFrame.java, RfbProto.java, VncCanvas.java: The "View Only"
+	mode now can be turned on/off at any moment.
+
+2002-01-12 08:12  const
+
+	* RfbProto.java: Insert key now can be passed to the remote side.
+
+2002-01-12 06:32  const
+
+	* VncCanvas.java, VncViewer.java: Dramatically simplified and
+	robust implementation of handling XCursor/RichCursor encodings. 
+	Enhancements and bugfixes for the "Open New Window" mode.  Other
+	minor enhancements and code cleanups.
+
+2002-01-11 10:36  const
+
+	* ClipboardFrame.java, OptionsFrame.java: Minor code enhancements.
+
+2002-01-11 09:35  const
+
+	* VncCanvas.java, VncViewer.java: Implemented scrolling of the
+	desktop area, when the desktop is shown in a separate window.
+
+2002-01-11 04:51  const
+
+	* ClipboardFrame.java, OptionsFrame.java: "Dismiss" buttons renamed
+	to "Close".
+
+2002-01-10 14:19  const
+
+	* ButtonPanel.java, VncViewer.java: Changes in the button panel.
+	Now keyboard focus moves back to the authentication panel or to the
+	desktop after pressing any button on the panel. Additionally,
+	keyboard focus should move to the desktop automatically when VNC
+	connection is established.
+
+2002-01-10 13:53  const
+
+	* ButtonPanel.java: Implemented new "Refresh" button. Pressing it
+	results sending a non-incremental FramebufferUpdateRequest message
+	to the server.
+
+2002-01-10 13:51  const
+
+	* VncCanvas.java: Now the viewer adjusts its desktop/window size on
+	desktop size changes on the remote side (working support for
+	NewFBSize pseudo-encoding).
+
+2002-01-10 12:50  const
+
+	* AuthPanel.java, ButtonPanel.java, ClipboardFrame.java, Makefile,
+	OptionsFrame.java, RfbProto.java, VncCanvas.java, VncViewer.java,
+	index.vnc: New "Open New Window" parameter was implemented, now the
+	viewer can work in a separate frame instead of running in the
+	applet area.  Class names were capitalized, to reflect usual Java
+	naming standards.
+
+2002-01-10 10:22  const
+
+	* index.vnc: Inserted a <br> tag to prevent www.tightvnc.com link
+	appear to the left of the applet area.
+
+2001-12-17 11:39  const
+
+	* ButtonPanel.java, Makefile: Converted to Java 1.1 event model.
+
+2001-12-16 06:56  const
+
+	* Makefile: First step of converting the source to Java 1.1: got
+	rid of animatedMemoryImageSource class; using new setAnimated()
+	method in the standard MemoryImageSource class instead.
+
+2001-06-18 09:46  const
+
+	* README: Version string change.
+
+2001-02-15 12:48  const
+
+	* README: Version string changed.
+
+2001-01-28 02:58  const
+
+	* README: One more name added to copyright strings. ;-)
+
+2001-01-28 02:51  const
+
+	* index.vnc: www.TridiaVNC.com links chanded to www.TightVNC.com.
+
+2001-01-28 02:43  const
+
+	* Makefile: More HTML templates for different default settings
+	prepared.
+
+2001-01-26 12:58  const
+
+	* Makefile: Unneeded changes reverted.
+
+2001-01-18 22:53  const
+
+	* Makefile: First version of Java vncviewer with tight encoding
+	support.
+
+2000-09-29 08:39  const
+
+	* Makefile, README, index.vnc: Initial revision
+
+2000-09-29 08:39  const
+
+	* DesCipher.java, LICENCE.TXT: Imported sources
+

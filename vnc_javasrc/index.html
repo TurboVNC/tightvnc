@@ -1,0 +1,19 @@
+<!-- 
+     index.html - an example HTML page for TightVNC Java viewer applet, to be
+     used with a standalone Web server running on the same machine where the
+     TightVNC server is running. Before using this example, make sure the
+     value of the PORT parameter is set correctly (normally, the port number
+     is 5900 + display number).
+-->
+
+<HTML>
+<TITLE>
+TightVNC desktop
+</TITLE>
+<APPLET CODE=VncViewer.class ARCHIVE=VncViewer.jar
+        WIDTH=800 HEIGHT=632>
+<param name=PORT value=5901>
+</APPLET>
+<BR>
+<A href="http://www.tightvnc.com/">TightVNC site</A>
+</HTML>

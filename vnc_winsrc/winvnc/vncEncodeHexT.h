@@ -57,7 +57,7 @@ public:
 	virtual UINT RequiredBuffSize(UINT width, UINT height);
 	virtual UINT NumCodedRects(RECT &rect);
 
-	virtual UINT EncodeRect(BYTE *source, BYTE *dest, const RECT &rect);
+	virtual UINT EncodeRect(BYTE *source, BYTE *dest, const RECT &rect, int offsetx, int offsety);
 
 protected:
 	virtual UINT EncodeHextiles8(BYTE *source, BYTE *dest,

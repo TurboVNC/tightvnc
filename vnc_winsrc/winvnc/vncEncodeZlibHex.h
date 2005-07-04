@@ -76,7 +76,7 @@ public:
 	virtual UINT NumCodedRects(RECT &rect);
 
 	// virtual UINT EncodeRect(BYTE *source, BYTE *dest, const RECT &rect);
-	virtual UINT EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect);
+	virtual UINT EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect, int offx, int offy);
 
 protected:
 	virtual UINT zlibCompress(BYTE *from_buf, BYTE *to_buf, UINT length, struct z_stream_s *compressor);
@@ -90,8 +90,10 @@ protected:
 
 // Implementation
 protected:
-	BYTE		      *m_buffer;
-	int			       m_bufflen;
+	BYTE				*m_buffer;
+	int					m_bufflen;
+	int					offsetx;
+	int					offsety;
 	struct z_stream_s  compStreamRaw;
 	struct z_stream_s  compStreamEncoded;
 };

@@ -79,7 +79,7 @@ vncEncodeHexT::NumCodedRects(RECT &rect)
  */
 
 UINT
-vncEncodeHexT::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
+vncEncodeHexT::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect, int offsetx, int offsety)
 {
 	const UINT rectW = rect.right - rect.left;
 	const UINT rectH = rect.bottom - rect.top;
@@ -91,8 +91,8 @@ vncEncodeHexT::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
 	surh->r.y = (CARD16) rect.top;
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
-	surh->r.x = Swap16IfLE(surh->r.x);
-	surh->r.y = Swap16IfLE(surh->r.y);
+	surh->r.x = Swap16IfLE(surh->r.x - offsetx);
+	surh->r.y = Swap16IfLE(surh->r.y - offsety);
 	surh->r.w = Swap16IfLE(surh->r.w);
 	surh->r.h = Swap16IfLE(surh->r.h);
 	surh->encoding = Swap32IfLE(rfbEncodingHextile);
@@ -123,7 +123,7 @@ vncEncodeHexT::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
 		return sz_rfbFramebufferUpdateRectHeader + encodedResult;
     }
 
-	return vncEncoder::EncodeRect(source, dest, rect);
+	return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 }
 
 #define PUT_PIXEL8(pix) (dest[destoffset++] = (pix))

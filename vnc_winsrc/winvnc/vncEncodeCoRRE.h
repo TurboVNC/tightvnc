@@ -56,7 +56,7 @@ public:
 	virtual UINT RequiredBuffSize(UINT width, UINT height);
 	virtual UINT NumCodedRects(RECT &rect);
 
-	virtual UINT EncodeRect(BYTE *source, BYTE *dest, const RECT &rect);
+	virtual UINT EncodeRect(BYTE *source, BYTE *dest, const RECT &rect, int offx, int offy);
 	virtual void SetCoRREMax(BYTE width, BYTE height);
 protected:
 	virtual UINT InternalEncodeRect(BYTE *source, BYTE *dest, const RECT &rect);
@@ -77,6 +77,8 @@ protected:
 	int			m_maxadjust;
 	int			m_threshold;
 	BOOL		m_statsready;
+	int			offsetx;
+	int			offsety;
 };
 
 #endif // _WINVNC_ENCODECORRE

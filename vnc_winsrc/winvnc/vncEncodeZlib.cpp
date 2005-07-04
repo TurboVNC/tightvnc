@@ -104,12 +104,14 @@ vncEncodeZlib::NumCodedRects(RECT &rect)
 
 // Encode the rectangle using zlib compression
 inline UINT
-vncEncodeZlib::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect)
+vncEncodeZlib::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect, int offx, int offy)
 {
 	int  totalSize = 0;
 	int  partialSize = 0;
 	int  maxLines;
 	int  linesRemaining;
+	offsetx = offx;
+	offsety = offy;
 	RECT partialRect;
 
 	const rectW = rect.right - rect.left;
@@ -177,16 +179,16 @@ vncEncodeZlib::EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect)
 
 	// Send as raw if the update is too small to compress.
 	if (rawDataSize < VNC_ENCODE_ZLIB_MIN_COMP_SIZE)
-		return vncEncoder::EncodeRect(source, dest, rect);
+		return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 
 	// Create the rectangle header
 	rfbFramebufferUpdateRectHeader *surh=(rfbFramebufferUpdateRectHeader *)dest;
-	surh->r.x = (CARD16) rect.left;
-	surh->r.y = (CARD16) rect.top;
+	surh->r.x = (CARD16) rect.left ;
+	surh->r.y = (CARD16) rect.top ;
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
-	surh->r.x = Swap16IfLE(surh->r.x);
-	surh->r.y = Swap16IfLE(surh->r.y);
+	surh->r.x = Swap16IfLE(surh->r.x- offsetx);
+	surh->r.y = Swap16IfLE(surh->r.y- offsety);
 	surh->r.w = Swap16IfLE(surh->r.w);
 	surh->r.h = Swap16IfLE(surh->r.h);
 	surh->encoding = Swap32IfLE(rfbEncodingZlib);
@@ -204,7 +206,7 @@ vncEncodeZlib::EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect)
 		}
 		m_buffer = new BYTE [rawDataSize+1];
 		if (m_buffer == NULL)
-			return vncEncoder::EncodeRect(source, dest, rect);
+			return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 		m_bufflen = rawDataSize;
 	}
 
@@ -239,7 +241,7 @@ vncEncodeZlib::EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect)
 		if ( deflateResult != Z_OK )
 		{
 			vnclog.Print(LL_INTINFO, VNCLOG("deflateInit2 returned error:%d:%s\n"), deflateResult, compStream.msg);
-			return vncEncoder::EncodeRect(source, dest, rect);
+			return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 		}
 		compStreamInited = true;
 	}
@@ -253,7 +255,7 @@ vncEncodeZlib::EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect)
 	if ( deflateResult != Z_OK )
 	{
 		vnclog.Print(LL_INTINFO, VNCLOG("deflate returned error:%d:%s\n"), deflateResult, compStream.msg);
-		return vncEncoder::EncodeRect(source, dest, rect);
+		return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 	}
 
 	// Calculate size of compressed data.

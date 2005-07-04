@@ -112,15 +112,15 @@ vncEncodeZlibHex::NumCodedRects(RECT &rect)
  */
 
 UINT
-vncEncodeZlibHex::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect)
+vncEncodeZlibHex::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect, int offx, int offy)
 {
 	const rectW = rect.right - rect.left;
 	const rectH = rect.bottom - rect.top;
 
 	// Create the rectangle header
 	rfbFramebufferUpdateRectHeader *surh=(rfbFramebufferUpdateRectHeader *)dest;
-	surh->r.x = (CARD16) rect.left;
-	surh->r.y = (CARD16) rect.top;
+	surh->r.x = (CARD16) rect.left - offx;
+	surh->r.y = (CARD16) rect.top - offy;
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
 	surh->r.x = Swap16IfLE(surh->r.x);
@@ -148,7 +148,7 @@ vncEncodeZlibHex::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const R
 		return EncodeHextiles32(source, dest, outConn, rect.left, rect.top, rectW, rectH);
     }
 
-	return vncEncoder::EncodeRect(source, dest, rect);
+	return vncEncoder::EncodeRect(source, dest, rect, offx, offy);
 }
 
 UINT

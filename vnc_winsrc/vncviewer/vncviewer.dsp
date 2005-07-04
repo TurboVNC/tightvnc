@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=vncviewer - Win32 Profile
+CFG=vncviewer - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,13 +13,12 @@ CFG=vncviewer - Win32 Profile
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "vncviewer.mak" CFG="vncviewer - Win32 Profile"
+!MESSAGE NMAKE /f "vncviewer.mak" CFG="vncviewer - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "vncviewer - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "vncviewer - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "vncviewer - Win32 Profile" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -44,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /Ob0 /I "omnithread" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /D "__WIN32__" /D "XMD_H" /D "NEED_FAR_POINTERS" /FR /YX"stdhdrs.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /Ob0 /I "omnithread" /I ".." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /D "__WIN32__" /D "XMD_H" /FR /YX"stdhdrs.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -54,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 winmm.lib omnithread.lib zlib.lib libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib /nologo /subsystem:windows /machine:I386 /libpath:"omnithread/Release" /libpath:"zlib/Release" /libpath:"libjpeg/Release"
+# ADD LINK32 winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /machine:I386
 
 !ELSEIF  "$(CFG)" == "vncviewer - Win32 Debug"
 
@@ -70,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "omnithread" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /D "__WIN32__" /D "XMD_H" /FR /YX"stdhdrs.h" /FD /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "omnithread" /I ".." /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /D "__WIN32__" /D "XMD_H" /FR /YX"stdhdrs.h" /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -80,34 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ole32.lib oleaut32.lib winmm.lib omnithread.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib /nologo /subsystem:windows /map /debug /machine:I386 /pdbtype:sept /libpath:"./omnithread/Debug"
-
-!ELSEIF  "$(CFG)" == "vncviewer - Win32 Profile"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "vncviewe"
-# PROP BASE Intermediate_Dir "vncviewe"
-# PROP BASE Ignore_Export_Lib 0
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Profile"
-# PROP Intermediate_Dir "Profile"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /I "omnithread" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /FR /YX"stdhdrs.h" /FD /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "omnithread" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__NT__" /D "_WINSTATIC" /D "__WIN32__" /FR /YX"stdhdrs.h" /FD /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 ole32.lib oleaut32.lib winmm.lib omnithread.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"./omnithread/Debug"
-# ADD LINK32 ole32.lib oleaut32.lib winmm.lib omnithread.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib /nologo /subsystem:windows /profile /debug /machine:I386 /libpath:"./omnithread/Debug"
+# ADD LINK32 winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib uuid.lib wsock32.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /map /debug /machine:I386 /nodefaultlib:"libcd" /pdbtype:sept
 
 !ENDIF 
 
@@ -115,7 +87,6 @@ LINK32=link.exe
 
 # Name "vncviewer - Win32 Release"
 # Name "vncviewer - Win32 Debug"
-# Name "vncviewer - Win32 Profile"
 # Begin Group "Resources"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe"
@@ -125,11 +96,35 @@ SOURCE=.\res\cursor1.cur
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\filereload.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\fileup.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\idr_tray.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\nocursor.cur
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\smalldot.cur
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tightvnc.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tightvnc48.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\toolbar.bmp
 # End Source File
 # Begin Source File
 
@@ -166,22 +161,19 @@ SOURCE=.\AuthDialog.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CapsContainer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CapsContainer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ClientConnection.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\ClientConnection.h
-
-!IF  "$(CFG)" == "vncviewer - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "vncviewer - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "vncviewer - Win32 Profile"
-
-# PROP Intermediate_Dir "Profile"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -233,6 +225,14 @@ SOURCE=.\ClientConnectionZlibHex.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ConnectingDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ConnectingDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\COPYING.txt
 # End Source File
 # Begin Source File
@@ -261,6 +261,22 @@ SOURCE=.\Exception.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\FileTransfer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FileTransfer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FileTransferItemInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FileTransferItemInfo.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Flasher.cpp
 # End Source File
 # Begin Source File
@@ -270,6 +286,14 @@ SOURCE=.\Flasher.h
 # Begin Source File
 
 SOURCE=.\History.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\HotKeys.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HotKeys.h
 # End Source File
 # Begin Source File
 
@@ -297,11 +321,11 @@ SOURCE=.\Log.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MRU.cpp
+SOURCE=.\LoginAuthDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MRU.h
+SOURCE=.\LoginAuthDialog.h
 # End Source File
 # Begin Source File
 
@@ -313,7 +337,7 @@ SOURCE=.\rfb.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\rfbproto.h
+SOURCE=..\rfb\rfbproto.h
 # End Source File
 # Begin Source File
 
@@ -335,11 +359,6 @@ SOURCE=.\stdhdrs.cpp
 
 # ADD CPP /Yc"stdhdrs.h"
 
-!ELSEIF  "$(CFG)" == "vncviewer - Win32 Profile"
-
-# ADD BASE CPP /Yc"stdhdrs.h"
-# ADD CPP /Yc"stdhdrs.h"
-
 !ENDIF 
 
 # End Source File
@@ -358,6 +377,14 @@ SOURCE=.\vncauth.c
 # Begin Source File
 
 SOURCE=.\vncauth.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\VNCHelp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\VNCHelp.h
 # End Source File
 # Begin Source File
 

@@ -1,12 +1,12 @@
 Summary:   A remote display system.
 Name:      tightvnc
-Version:   1.2.9
+Version:   1.3dev7
 Release:   1
 URL:       http://www.tightvnc.com/
 Source0:   tightvnc-%{version}_unixsrc.tar.bz2
 License:   GPL
 Group:     User Interface/Desktops
-Packager:  Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+Packager:  Constantin Kaplinsky <const@tightvnc.com>
 Obsoletes: vnc
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildPrereq: /usr/bin/perl tcp_wrappers
@@ -24,7 +24,7 @@ to connect to other desktops running a VNC or a TightVNC server.
 %package server
 Summary: TightVNC server
 Obsoletes: vnc-server
-Requires: XFree86 bash >= 2.0
+Requires: bash >= 2.0
 Group: User Interface/X
 Prereq: /sbin/chkconfig /sbin/service /etc/init.d
 
@@ -134,8 +134,18 @@ fi
 %{_mandir}/man1/vncpasswd.1*
 
 %changelog
-* Thu Jul 31 2003 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
-- TightVNC 1.2.9 update.
+* Sun Jul 03 2005 Constantin Kaplinsky <const@tightvnc.com>
+- Removed vnc-server's dependence on XFree86, changed maintainer's
+  e-mail address, TightVNC updated to 1.3dev7.
+
+* Sun May 30 2004 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+- TightVNC 1.3dev5 update.
+
+* Thu Mar 04 2004 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+- TightVNC 1.3dev4 update.
+
+* Fri Feb 27 2004 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+- TightVNC 1.3dev3 update.
 
 * Wed Jan 29 2003 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
 - TightVNC 1.2.8 update.

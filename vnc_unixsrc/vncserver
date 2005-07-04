@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#  Copyright (C) 2002 Constantin Kaplinsky.  All Rights Reserved.
+#  Copyright (C) 2002-2003 Constantin Kaplinsky.  All Rights Reserved.
 #  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
 #
 #  This is free software; you can redistribute it and/or modify
@@ -39,6 +39,7 @@ $desktopName = "X";
 $vncClasses = "/usr/local/vnc/classes";
 $vncUserDir = "$ENV{HOME}/.vnc";
 $fontPath = "unix/:7100";
+$authType = "-rfbauth $vncUserDir/passwd";
 
 # Here is another example of setting the font path:
 # $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
@@ -176,7 +177,7 @@ $cmd .= " -geometry $geometry" if ($geometry);
 $cmd .= " -depth $depth" if ($depth);
 $cmd .= " -pixelformat $pixelformat" if ($pixelformat);
 $cmd .= " -rfbwait 120000";
-$cmd .= " -rfbauth $vncUserDir/passwd";
+$cmd .= " $authType";
 $cmd .= " -rfbport $vncPort";
 $cmd .= " -fp $fontPath" if ($fontPath);
 $cmd .= " -co $colorPath" if ($colorPath);
@@ -446,7 +447,7 @@ sub removeSlashes
 
 sub Usage
 {
-    die("TightVNC server version 1.2.9\n".
+    die("TightVNC server version 1.3dev7\n".
 	"\n".
 	"Usage: $prog [<OPTIONS>] [:<DISPLAY#>]\n".
 	"       $prog -kill :<DISPLAY#>\n".

@@ -42,6 +42,7 @@ class OptionsFrame extends Frame
     "Restricted colors",
     "Mouse buttons 2 and 3",
     "View only",
+    "Scale remote cursor",
     "Share desktop",
   };
 
@@ -54,6 +55,7 @@ class OptionsFrame extends Frame
     { "Yes", "No" },
     { "Normal", "Reversed" },
     { "Yes", "No" },
+    { "No", "50%", "75%", "125%", "150%" },
     { "Yes", "No" },
   };
 
@@ -66,7 +68,8 @@ class OptionsFrame extends Frame
     eightBitColorsIndex  = 5,
     mouseButtonIndex     = 6,
     viewOnlyIndex        = 7,
-    shareDesktopIndex    = 8;
+    scaleCursorIndex     = 8,
+    shareDesktopIndex    = 9;
 
   Label[] labels = new Label[names.length];
   Choice[] choices = new Choice[names.length];
@@ -92,6 +95,7 @@ class OptionsFrame extends Frame
   boolean reverseMouseButtons2And3;
   boolean shareDesktop;
   boolean viewOnly;
+  int scaleCursor;
 
   //
   // Constructor.  Set up the labels and choices from the names and values
@@ -146,6 +150,7 @@ class OptionsFrame extends Frame
     choices[eightBitColorsIndex].select("No");
     choices[mouseButtonIndex].select("Normal");
     choices[viewOnlyIndex].select("No");
+    choices[scaleCursorIndex].select("No");
     choices[shareDesktopIndex].select("Yes");
 
     // But let them be overridden by parameters
@@ -328,6 +333,28 @@ class OptionsFrame extends Frame
 
     shareDesktop
       = choices[shareDesktopIndex].getSelectedItem().equals("Yes");
+
+    String scaleString = choices[scaleCursorIndex].getSelectedItem();
+    if (scaleString.endsWith("%"))
+      scaleString = scaleString.substring(0, scaleString.length() - 1);
+    try {
+      scaleCursor = Integer.parseInt(scaleString);
+    }
+    catch (NumberFormatException e) {
+      scaleCursor = 0;
+    }
+    if (scaleCursor < 10 || scaleCursor > 500) {
+      scaleCursor = 0;
+    }
+    if (requestCursorUpdates && !ignoreCursorUpdates && !viewOnly) {
+      labels[scaleCursorIndex].setEnabled(true);
+      choices[scaleCursorIndex].setEnabled(true);
+    } else {
+      labels[scaleCursorIndex].setEnabled(false);
+      choices[scaleCursorIndex].setEnabled(false);
+    }
+    if (viewer.vc != null)
+      viewer.vc.createSoftCursor(); // update cursor scaling
   }
 
 
@@ -346,13 +373,18 @@ class OptionsFrame extends Frame
 
       setEncodings();
 
+      if (source == choices[cursorUpdatesIndex]) {
+        setOtherOptions();      // update scaleCursor state
+      }
+
     } else if (source == choices[eightBitColorsIndex]) {
 
       setColorFormat();
 
     } else if (source == choices[mouseButtonIndex] ||
 	       source == choices[shareDesktopIndex] ||
-	       source == choices[viewOnlyIndex]) {
+	       source == choices[viewOnlyIndex] ||
+	       source == choices[scaleCursorIndex]) {
 
       setOtherOptions();
     }

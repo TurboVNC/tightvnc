@@ -27,6 +27,7 @@ LOCAL_LIBRARIES = XawClientLibs $(VNCAUTH_LIB) $(ZLIB_LIB) $(JPEG_LIB)
 
 SRCS = \
   argsresources.c \
+  caps.c \
   colour.c \
   cursor.c \
   desktop.c \

@@ -31,7 +31,7 @@
 #include "stdhdrs.h"
 #include "vncviewer.h"
 #include "ClientConnection.h"
-#include "zlib\zlib.h"
+#include "zlib/zlib.h"
 
 bool ClientConnection::zlibDecompress(unsigned char *from_buf, unsigned char *to_buf, unsigned int count, unsigned int size, z_stream *decompressor)
 {

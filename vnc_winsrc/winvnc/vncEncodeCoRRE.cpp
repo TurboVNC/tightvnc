@@ -198,13 +198,15 @@ static CARD32 getBgColour (char *data, int size, int bpp);
  */
 
 UINT
-vncEncodeCoRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
+vncEncodeCoRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect, int offx, int offy)
 {
 	// Do the encoding
 	UINT size = InternalEncodeRect(source, dest, rect);
 
 	const int rectW = rect.right - rect.left;
 	const int rectH = rect.bottom - rect.top;
+	offsetx = offx;
+	offsety = offy;
 
 	// Will this rectangle have been split for encoding?
 	if ((rectW>m_maxwidth) || (rectH>m_maxheight))
@@ -295,8 +297,8 @@ vncEncodeCoRRE::EncodeSmallRect(BYTE *source, BYTE *dest, const RECT &rect)
 	surh->r.y = (CARD16) rect.top;
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
-	surh->r.x = Swap16IfLE(surh->r.x);
-	surh->r.y = Swap16IfLE(surh->r.y);
+	surh->r.x = Swap16IfLE(surh->r.x - offsetx);
+	surh->r.y = Swap16IfLE(surh->r.y - offsety);
 	surh->r.w = Swap16IfLE(surh->r.w);
 	surh->r.h = Swap16IfLE(surh->r.h);
 	surh->encoding = Swap32IfLE(rfbEncodingCoRRE);
@@ -313,7 +315,7 @@ vncEncodeCoRRE::EncodeSmallRect(BYTE *source, BYTE *dest, const RECT &rect)
 		}
 		m_buffer = new BYTE [rectSize + 1];
 		if (m_buffer == NULL)
-			return vncEncoder::EncodeRect(source, dest, rect);
+			return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 
 		m_bufflen = rectSize;
 	}
@@ -358,7 +360,7 @@ vncEncodeCoRRE::EncodeSmallRect(BYTE *source, BYTE *dest, const RECT &rect)
 
 	// If we couldn't encode the rectangles then just send the data raw
 	if (subrects < 0)
-		return vncEncoder::EncodeRect(source, dest, rect);
+		return vncEncoder::EncodeRect(source, dest, rect, offsetx, offsety);
 
 	// Send the RREHeader
 	rfbRREHeader *rreh=(rfbRREHeader *)(dest+sz_rfbFramebufferUpdateRectHeader);

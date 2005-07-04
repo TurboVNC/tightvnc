@@ -69,7 +69,7 @@ public:
 	virtual UINT RequiredBuffSize(UINT width, UINT height);
 	virtual UINT NumCodedRects(RECT &rect);
 
-	virtual UINT EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect);
+	virtual UINT EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect, int offx, int offy);
 	virtual UINT EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect);
 
 // Implementation
@@ -78,6 +78,8 @@ protected:
 	int			       m_bufflen;
 	struct z_stream_s  compStream;
 	bool               compStreamInited;
+	int offsetx;
+	int offsety;
 };
 
 #endif // _WINVNC_ENCODEZLIB

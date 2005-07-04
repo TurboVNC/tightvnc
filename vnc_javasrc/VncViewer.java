@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2001,2002 HorizonLive.com, Inc.  All Rights Reserved.
+//  Copyright (C) 2001-2004 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2002 Constantin Kaplinsky.  All Rights Reserved.
 //  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
 //
@@ -61,7 +61,9 @@ public class VncViewer extends java.applet.Applet
   ScrollPane desktopScrollPane;
   GridBagLayout gridbag;
   ButtonPanel buttonPanel;
+  Label connStatusLabel;
   AuthPanel authenticator;
+  AuthUnixLoginPanel authenticatorUnixLogin;
   VncCanvas vc;
   OptionsFrame options;
   ClipboardFrame clipboard;
@@ -79,8 +81,6 @@ public class VncViewer extends java.applet.Applet
   String socketFactory;
   String host;
   int port;
-  String passwordParam;
-  String encPasswordParam;
   boolean showControls;
   boolean offerRelogin;
   boolean showOfflineDesktop;
@@ -88,6 +88,8 @@ public class VncViewer extends java.applet.Applet
   int deferCursorUpdates;
   int deferUpdateRequests;
 
+  // Reference to this applet for inter-applet communication.
+  public static java.applet.Applet refApplet;
 
   //
   // init()
@@ -96,6 +98,8 @@ public class VncViewer extends java.applet.Applet
   public void init() {
 
     readParameters();
+
+    refApplet = this;
 
     if (inSeparateFrame) {
       vncFrame = new Frame("TightVNC");
@@ -111,7 +115,8 @@ public class VncViewer extends java.applet.Applet
 
     options = new OptionsFrame(this);
     clipboard = new ClipboardFrame(this);
-    authenticator = new AuthPanel();
+    authenticator = new AuthPanel(this);
+    authenticatorUnixLogin = new AuthUnixLoginPanel();
     if (RecordingFrame.checkSecurity())
       rec = new RecordingFrame(this);
 
@@ -152,7 +157,6 @@ public class VncViewer extends java.applet.Applet
 
     try {
       connectAndAuthenticate();
-
       doProtocolInitialisation();
 
       vc = new VncCanvas(this);
@@ -193,7 +197,7 @@ public class VncViewer extends java.applet.Applet
 	buttonPanel.enableButtons();
 
       moveFocusToDesktop();
-      vc.processNormalProtocol();
+      processNormalProtocol();
 
     } catch (NoRouteToHostException e) {
       fatalError("Network error: no route to server: " + host, e);
@@ -245,53 +249,176 @@ public class VncViewer extends java.applet.Applet
 
 
   //
+  // Process RFB socket messages.
+  // If the rfbThread is being stopped, ignore any exceptions,
+  // otherwise rethrow the exception so it can be handled.
+  //
+ 
+  void processNormalProtocol() throws Exception {
+    try {
+      vc.processNormalProtocol();
+    } catch (Exception e) {
+      if (rfbThread == null) {
+	System.out.println("Ignoring RFB socket exceptions" +
+			   " because applet is stopping");
+      } else {
+	throw e;
+      }
+    }
+  }
+
+
+  //
   // Connect to the RFB server and authenticate the user.
   //
 
-  void connectAndAuthenticate() throws Exception {
-
-    // If "ENCPASSWORD" parameter is set, decrypt the password into
-    // the passwordParam string.
-
-    if (encPasswordParam != null) {
-      // ENCPASSWORD is hexascii-encoded. Decode.
-      byte[] pw = {0, 0, 0, 0, 0, 0, 0, 0};
-      int len = encPasswordParam.length() / 2;
-      if (len > 8)
-	len = 8;
-      for (int i = 0; i < len; i++) {
-	String hex = encPasswordParam.substring(i*2, i*2+2);
-	Integer x = new Integer(Integer.parseInt(hex, 16));
-	pw[i] = x.byteValue();
-      }
-
-      // Decrypt the password.
-      byte[] key = {23, 82, 107, 6, 35, 78, 88, 7};
-      DesCipher des = new DesCipher(key);
-      des.decrypt(pw, 0, pw, 0);
-      passwordParam = new String(pw);
+  void connectAndAuthenticate() throws Exception
+  {
+    showConnectionStatus("Initializing...");
+    if (inSeparateFrame) {
+      vncFrame.pack();
+      vncFrame.show();
+    } else {
+      validate();
     }
 
-    // If a password parameter ("PASSWORD" or "ENCPASSWORD") is set,
-    // don't ask user a password, get one from passwordParam instead.
-    // Authentication failures would be fatal.
+    while (!tryAuthenticate()) {
+      authenticator.retry();
+      authenticatorUnixLogin.retry();
+    }
+  }
 
-    if (passwordParam != null) {
-      if (inSeparateFrame) {
-	vncFrame.pack();
-	vncFrame.show();
-      } else {
-	validate();
+
+  //
+  // Try to connect and authenticate.
+  //
+
+  boolean tryAuthenticate() throws Exception
+  {
+    showConnectionStatus("Connecting to " + host + ", port " + port + "...");
+
+    rfb = new RfbProto(host, port, this);
+    showConnectionStatus("Connected to server");
+
+    rfb.readVersionMsg();
+    showConnectionStatus("RFB server supports protocol version " +
+			 rfb.serverMajor + "." + rfb.serverMinor);
+
+    rfb.writeVersionMsg();
+    showConnectionStatus("Using RFB protocol version " +
+			 rfb.clientMajor + "." + rfb.clientMinor);
+
+    int secType = rfb.negotiateSecurity();
+    int authType = 0;
+
+    // FIXME: Map security types to authentication schemes in RfbProto.
+    switch (secType) {
+    case RfbProto.SecTypeNone:
+      authType = RfbProto.AuthNone;
+      break;
+    case RfbProto.SecTypeVncAuth:
+      authType = RfbProto.AuthVNC;
+      break;
+    case RfbProto.SecTypeTight:
+      showConnectionStatus("Enabling TightVNC protocol extensions");
+      rfb.initCapabilities();
+      rfb.setupTunneling();
+      authType = rfb.negotiateAuthenticationTight();
+      break;
+    default:
+      throw new Exception("Unknown security type " + secType);
+    }
+
+    boolean success = false;
+
+    switch (authType) {
+    case RfbProto.AuthNone:
+      showConnectionStatus("No authentication needed");
+      success = true;
+      break;
+    case RfbProto.AuthVNC:
+      showConnectionStatus("Performing standard VNC authentication");
+      if (authenticator.isInteractionNecessary()) {
+	showAuthPanel(authenticator);
+	authenticator.moveFocusToDefaultField();
       }
-      if (!tryAuthenticate(passwordParam)) {
-	throw new Exception("VNC authentication failed");
+      success = authenticator.tryAuthenticate(rfb);
+      if (authenticator.isInteractionNecessary()) {
+	vncContainer.remove(authenticator);
+      } else {
+	// Don't retry non-interactive authentication.
+	if (!success)
+	  throw new Exception("VNC authentication failed");
+      }
+      break;
+    case RfbProto.AuthUnixLogin:
+      showConnectionStatus("Performing Unix login-style authentication");
+      showAuthPanel(authenticatorUnixLogin);
+      authenticatorUnixLogin.moveFocusToDefaultField();
+      success = authenticatorUnixLogin.tryAuthenticate(rfb);
+      vncContainer.remove(authenticatorUnixLogin);
+      break;
+    default:
+      throw new Exception("Unknown authentication scheme " + authType);
+    }
+
+    if (!success)
+      rfb.close();
+
+    return success;
+  }
+
+
+  //
+  // Show a message describing the connection status.
+  // To hide the connection status label, use (msg == null).
+  //
+
+  void showConnectionStatus(String msg)
+  {
+    if (msg == null) {
+      if (vncContainer.isAncestorOf(connStatusLabel)) {
+	vncContainer.remove(connStatusLabel);
       }
       return;
     }
 
-    // There is no "PASSWORD" or "ENCPASSWORD" parameters -- ask user
-    // for a password, try to authenticate, retry on authentication
-    // failures.
+    System.out.println(msg);
+
+    if (connStatusLabel == null) {
+      connStatusLabel = new Label("Status: " + msg);
+      connStatusLabel.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    } else {
+      connStatusLabel.setText("Status: " + msg);
+    }
+
+    if (!vncContainer.isAncestorOf(connStatusLabel)) {
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.gridwidth = GridBagConstraints.REMAINDER;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      gbc.weightx = 1.0;
+      gbc.weighty = 1.0;
+      gbc.insets = new Insets(20, 30, 20, 30);
+      gridbag.setConstraints(connStatusLabel, gbc);
+      vncContainer.add(connStatusLabel);
+    }
+
+    if (inSeparateFrame) {
+      vncFrame.pack();
+    } else {
+      validate();
+    }
+  }
+
+
+  //
+  // Show an authentication panel.
+  //
+
+  void showAuthPanel(Panel authPanel)
+  {
+    showConnectionStatus(null);
 
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -300,111 +427,14 @@ public class VncViewer extends java.applet.Applet
     gbc.weighty = 1.0;
     gbc.ipadx = 100;
     gbc.ipady = 50;
-    gridbag.setConstraints(authenticator, gbc);
-    vncContainer.add(authenticator);
+    gridbag.setConstraints(authPanel, gbc);
+    vncContainer.add(authPanel);
 
     if (inSeparateFrame) {
       vncFrame.pack();
-      vncFrame.show();
     } else {
       validate();
-      // FIXME: here moveFocusToPasswordField() does not always work
-      // under Netscape 4.7x/Java 1.1.5/Linux. It seems like this call
-      // is being executed before the password field of the
-      // authenticator is fully drawn and activated, therefore
-      // requestFocus() does not work. Currently, I don't know how to
-      // solve this problem.
-      //   -- const
-      authenticator.moveFocusToPasswordField();
     }
-
-    while (true) {
-      // Wait for user entering a password.
-      synchronized(authenticator) {
-	try {
-	  authenticator.wait();
-	} catch (InterruptedException e) {
-	}
-      }
-
-      // Try to authenticate with a given password.
-      if (tryAuthenticate(authenticator.password.getText()))
-	break;
-
-      // Retry on authentication failure.
-      authenticator.retry();
-    }
-
-    vncContainer.remove(authenticator);
-  }
-
-
-  //
-  // Try to authenticate with a given password.
-  //
-
-  boolean tryAuthenticate(String pw) throws Exception {
-
-    rfb = new RfbProto(host, port, this);
-
-    rfb.readVersionMsg();
-
-    System.out.println("RFB server supports protocol version " +
-		       rfb.serverMajor + "." + rfb.serverMinor);
-
-    rfb.writeVersionMsg();
-
-    int authScheme = rfb.readAuthScheme();
-
-    switch (authScheme) {
-
-    case RfbProto.NoAuth:
-      System.out.println("No authentication needed");
-      return true;
-
-    case RfbProto.VncAuth:
-      byte[] challenge = new byte[16];
-      rfb.is.readFully(challenge);
-
-      if (pw.length() > 8)
-	pw = pw.substring(0, 8); // Truncate to 8 chars
-
-      // vncEncryptBytes in the UNIX libvncauth truncates password
-      // after the first zero byte. We do to.
-      int firstZero = pw.indexOf(0);
-      if (firstZero != -1)
-	pw = pw.substring(0, firstZero);
-
-      byte[] key = {0, 0, 0, 0, 0, 0, 0, 0};
-      System.arraycopy(pw.getBytes(), 0, key, 0, pw.length());
-
-      DesCipher des = new DesCipher(key);
-
-      des.encrypt(challenge, 0, challenge, 0);
-      des.encrypt(challenge, 8, challenge, 8);
-
-      rfb.os.write(challenge);
-
-      int authResult = rfb.is.readInt();
-
-      switch (authResult) {
-      case RfbProto.VncAuthOK:
-	System.out.println("VNC authentication succeeded");
-	return true;
-      case RfbProto.VncAuthFailed:
-	System.out.println("VNC authentication failed");
-	break;
-      case RfbProto.VncAuthTooMany:
-	throw new Exception("VNC authentication failed - too many tries");
-      default:
-	throw new Exception("Unknown VNC authentication result " + authResult);
-      }
-      break;
-
-    default:
-      throw new Exception("Unknown VNC authentication scheme " + authScheme);
-    }
-    return false;
   }
 
 
@@ -412,10 +442,9 @@ public class VncViewer extends java.applet.Applet
   // Do the rest of the protocol initialisation.
   //
 
-  void doProtocolInitialisation() throws IOException {
-
+  void doProtocolInitialisation() throws IOException
+  {
     rfb.writeClientInit();
-
     rfb.readServerInit();
 
     System.out.println("Desktop name is " + rfb.desktopName);
@@ -423,6 +452,8 @@ public class VncViewer extends java.applet.Applet
 		       rfb.framebufferHeight);
 
     setEncodings();
+
+    showConnectionStatus(null);
   }
 
 
@@ -569,10 +600,6 @@ public class VncViewer extends java.applet.Applet
 	inSeparateFrame = true;
     }
 
-    encPasswordParam = readParameter("ENCPASSWORD", false);
-    if (encPasswordParam == null)
-      passwordParam = readParameter("PASSWORD", false);
-
     // "Show Controls" set to "No" disables button panel.
     showControls = true;
     str = readParameter("Show Controls", false);
@@ -649,7 +676,9 @@ public class VncViewer extends java.applet.Applet
       if (vc != null && vncContainer.isAncestorOf(vc)) {
 	vc.requestFocus();
       } else if (vncContainer.isAncestorOf(authenticator)) {
-	authenticator.moveFocusToPasswordField();
+	authenticator.moveFocusToDefaultField();
+      } else if (vncContainer.isAncestorOf(authenticatorUnixLogin)) {
+	authenticatorUnixLogin.moveFocusToDefaultField();
       }
     }
   }
@@ -677,6 +706,7 @@ public class VncViewer extends java.applet.Applet
 
   //
   // fatalError() - print out a fatal error message.
+  // FIXME: Do we really need two versions of the fatalError() method?
   //
 
   synchronized public void fatalError(String str) {
@@ -693,18 +723,18 @@ public class VncViewer extends java.applet.Applet
 
   synchronized public void fatalError(String str, Exception e) {
  
-    if (rfb != null) {
+    if (rfb != null && rfb.closed()) {
       // Not necessary to show error message if the error was caused
       // by I/O problems after the rfb.close() method call.
-      if (rfb.closed()) {
-	System.out.println("RFB thread finished");
-	return;
-      }
-      rfb.close();
+      System.out.println("RFB thread finished");
+      return;
     }
 
-    e.printStackTrace();
     System.out.println(str);
+    e.printStackTrace();
+
+    if (rfb != null)
+      rfb.close();
 
     if (inAnApplet) {
       showMessage(str);
@@ -750,11 +780,23 @@ public class VncViewer extends java.applet.Applet
   }
 
   //
+  // Stop the applet.
+  // Main applet thread will terminate on first exception
+  // after seeing that rfbThread has been set to null.
+  //
+
+  public void stop() {
+    System.out.println("Stopping applet");
+    rfbThread = null;
+  }
+
+  //
   // This method is called before the applet is destroyed.
   //
 
   public void destroy() {
     System.out.println("Destroying applet");
+
     vncContainer.removeAll();
     options.dispose();
     clipboard.dispose();
@@ -766,6 +808,13 @@ public class VncViewer extends java.applet.Applet
       vncFrame.dispose();
   }
 
+  //
+  // Start/stop receiving mouse events.
+  //
+
+  public void enableInput(boolean enable) {
+    vc.enableInput(enable);
+  }
 
   //
   // Close application properly on window close event.
@@ -776,7 +825,8 @@ public class VncViewer extends java.applet.Applet
     if (rfb != null)
       disconnect();
 
-    vncFrame.dispose();
+    vncContainer.hide();
+
     if (!inAnApplet) {
       System.exit(0);
     }
@@ -787,8 +837,11 @@ public class VncViewer extends java.applet.Applet
   //
 
   public void windowActivated(WindowEvent evt) {
-    if (vncFrame.isAncestorOf(authenticator))
-      authenticator.moveFocusToPasswordField();
+    if (vncFrame.isAncestorOf(authenticator)) {
+      authenticator.moveFocusToDefaultField();
+    } else if (vncContainer.isAncestorOf(authenticatorUnixLogin)) {
+      authenticatorUnixLogin.moveFocusToDefaultField();
+    }
   }
 
   //

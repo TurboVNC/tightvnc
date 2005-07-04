@@ -252,21 +252,21 @@ getBgColour(char *data, int size, int bpp)
 
 // Encode the rectangle using RRE
 inline UINT
-vncEncodeRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
+vncEncodeRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect, int offx, int offy)
 {
 	int subrects = -1;
 
 	const UINT rectW = rect.right - rect.left;
 	const UINT rectH = rect.bottom - rect.top;
-
+	
 	// Create the rectangle header
 	rfbFramebufferUpdateRectHeader *surh=(rfbFramebufferUpdateRectHeader *)dest;
 	surh->r.x = (CARD16) rect.left;
 	surh->r.y = (CARD16) rect.top;
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
-	surh->r.x = Swap16IfLE(surh->r.x);
-	surh->r.y = Swap16IfLE(surh->r.y);
+	surh->r.x = Swap16IfLE(surh->r.x - offx);
+	surh->r.y = Swap16IfLE(surh->r.y - offy);
 	surh->r.w = Swap16IfLE(surh->r.w);
 	surh->r.h = Swap16IfLE(surh->r.h);
 	surh->encoding = Swap32IfLE(rfbEncodingRRE);
@@ -282,7 +282,7 @@ vncEncodeRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
 		}
 		m_buffer = new BYTE [rectSize + 1];
 		if (m_buffer == NULL)
-			return vncEncoder::EncodeRect(source, dest, rect);
+			return vncEncoder::EncodeRect(source, dest, rect, offx, offy);
 		m_bufflen = rectSize;
 	}
 	
@@ -323,7 +323,7 @@ vncEncodeRRE::EncodeRect(BYTE *source, BYTE *dest, const RECT &rect)
 
 	// If we couldn't encode the rectangles then just send the data raw
 	if (subrects < 0)
-		return vncEncoder::EncodeRect(source, dest, rect);
+		return vncEncoder::EncodeRect(source, dest, rect, offx, offy);
 
 	// Send the RREHeader
 	rfbRREHeader *rreh=(rfbRREHeader *)(dest+sz_rfbFramebufferUpdateRectHeader);

@@ -1,5 +1,6 @@
 //
-//  Copyright (C) 2001,2002 HorizonLive.com, Inc.  All Rights Reserved.
+//  Copyright (C) 2004 Horizon Wimba.  All Rights Reserved.
+//  Copyright (C) 2001-2003 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2001,2002 Constantin Kaplinsky.  All Rights Reserved.
 //  Copyright (C) 2000 Tridia Corporation.  All Rights Reserved.
 //  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
@@ -171,6 +172,7 @@ class VncCanvas extends Canvas
       if (viewer.showControls) {
 	viewer.buttonPanel.enableRemoteAccessControls(true);
       }
+      createSoftCursor();	// scaled cursor
     } else if (!enable && inputEnabled) {
       inputEnabled = false;
       removeMouseListener(this);
@@ -178,6 +180,7 @@ class VncCanvas extends Canvas
       if (viewer.showControls) {
 	viewer.buttonPanel.enableRemoteAccessControls(false);
       }
+      createSoftCursor();	// non-scaled cursor
     }
   }
 
@@ -202,12 +205,12 @@ class VncCanvas extends Canvas
     // its geometry should be changed. It's not necessary to replace
     // existing image if only pixel format should be changed.
     if (memImage == null) {
-      memImage = viewer.createImage(fbWidth, fbHeight);
+      memImage = viewer.vncContainer.createImage(fbWidth, fbHeight);
       memGraphics = memImage.getGraphics();
     } else if (memImage.getWidth(null) != fbWidth ||
 	       memImage.getHeight(null) != fbHeight) {
       synchronized(memImage) {
-	memImage = viewer.createImage(fbWidth, fbHeight);
+	memImage = viewer.vncContainer.createImage(fbWidth, fbHeight);
 	memGraphics = memImage.getGraphics();
       }
     }
@@ -228,7 +231,7 @@ class VncCanvas extends Canvas
 	new MemoryImageSource(fbWidth, fbHeight, cm24, pixels24, 0, fbWidth);
     }
     pixelsSource.setAnimated(true);
-    rawPixelsImage = createImage(pixelsSource);
+    rawPixelsImage = Toolkit.getDefaultToolkit().createImage(pixelsSource);
 
     // Update the size of desktop containers.
     if (viewer.inSeparateFrame) {
@@ -1250,13 +1253,14 @@ class VncCanvas extends Canvas
 
   boolean showSoftCursor = false;
 
-  int[] softCursorPixels;
   MemoryImageSource softCursorSource;
   Image softCursor;
 
   int cursorX = 0, cursorY = 0;
   int cursorWidth, cursorHeight;
+  int origCursorWidth, origCursorHeight;
   int hotX, hotY;
+  int origHotX, origHotY;
 
   //
   // Handle cursor shape update (XCursor and RichCursor encodings).
@@ -1267,17 +1271,16 @@ class VncCanvas extends Canvas
 			    int xhot, int yhot, int width, int height)
     throws IOException {
 
-    int bytesPerRow = (width + 7) / 8;
-    int bytesMaskData = bytesPerRow * height;
-
     softCursorFree();
 
     if (width * height == 0)
       return;
 
     // Ignore cursor shape data if requested by user.
-
     if (viewer.options.ignoreCursorUpdates) {
+      int bytesPerRow = (width + 7) / 8;
+      int bytesMaskData = bytesPerRow * height;
+
       if (encodingType == rfb.EncodingXCursor) {
 	rfb.is.skipBytes(6 + bytesMaskData * 2);
       } else {
@@ -1288,8 +1291,36 @@ class VncCanvas extends Canvas
     }
 
     // Decode cursor pixel data.
+    softCursorSource = decodeCursorShape(encodingType, width, height);
 
-    softCursorPixels = new int[width * height];
+    // Set original (non-scaled) cursor dimensions.
+    origCursorWidth = width;
+    origCursorHeight = height;
+    origHotX = xhot;
+    origHotY = yhot;
+
+    // Create off-screen cursor image.
+    createSoftCursor();
+
+    // Show the cursor.
+    showSoftCursor = true;
+    repaint(viewer.deferCursorUpdates,
+	    cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
+  }
+
+  //
+  // decodeCursorShape(). Decode cursor pixel data and return
+  // corresponding MemoryImageSource instance.
+  //
+
+  synchronized MemoryImageSource
+    decodeCursorShape(int encodingType, int width, int height)
+    throws IOException {
+
+    int bytesPerRow = (width + 7) / 8;
+    int bytesMaskData = bytesPerRow * height;
+
+    int[] softCursorPixels = new int[width * height];
 
     if (encodingType == rfb.EncodingXCursor) {
 
@@ -1385,25 +1416,50 @@ class VncCanvas extends Canvas
 
     }
 
-    // Draw the cursor on an off-screen image.
+    return new MemoryImageSource(width, height, softCursorPixels, 0, width);
+  }
 
-    softCursorSource =
-      new MemoryImageSource(width, height, softCursorPixels, 0, width);
-    softCursor = createImage(softCursorSource);
+  //
+  // createSoftCursor(). Assign softCursor new Image (scaled if necessary).
+  // Uses softCursorSource as a source for new cursor image.
+  //
 
-    // Set remaining data associated with cursor.
+  synchronized void
+    createSoftCursor() {
 
-    cursorWidth = width;
-    cursorHeight = height;
-    hotX = xhot;
-    hotY = yhot;
+    if (softCursorSource == null)
+      return;
 
-    showSoftCursor = true;
+    int scaleCursor = viewer.options.scaleCursor;
+    if (scaleCursor == 0 || !inputEnabled)
+      scaleCursor = 100;
 
-    // Show the cursor.
+    // Save original cursor coordinates.
+    int x = cursorX - hotX;
+    int y = cursorY - hotY;
+    int w = cursorWidth;
+    int h = cursorHeight;
 
-    repaint(viewer.deferCursorUpdates,
-	    cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
+    cursorWidth = (origCursorWidth * scaleCursor + 50) / 100;
+    cursorHeight = (origCursorHeight * scaleCursor + 50) / 100;
+    hotX = (origHotX * scaleCursor + 50) / 100;
+    hotY = (origHotY * scaleCursor + 50) / 100;
+    softCursor = Toolkit.getDefaultToolkit().createImage(softCursorSource);
+
+    if (scaleCursor != 100) {
+      softCursor = softCursor.getScaledInstance(cursorWidth, cursorHeight,
+						Image.SCALE_SMOOTH);
+    }
+
+    if (showSoftCursor) {
+      // Compute screen area to update.
+      x = Math.min(x, cursorX - hotX);
+      y = Math.min(y, cursorY - hotY);
+      w = Math.max(w, cursorWidth);
+      h = Math.max(h, cursorHeight);
+
+      repaint(viewer.deferCursorUpdates, x, y, w, h);
+    }
   }
 
   //
@@ -1411,15 +1467,16 @@ class VncCanvas extends Canvas
   //
 
   synchronized void softCursorMove(int x, int y) {
-    if (showSoftCursor) {
-      repaint(viewer.deferCursorUpdates,
-	      cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
-      repaint(viewer.deferCursorUpdates,
-	      x - hotX, y - hotY, cursorWidth, cursorHeight);
-    }
-
+    int oldX = cursorX;
+    int oldY = cursorY;
     cursorX = x;
     cursorY = y;
+    if (showSoftCursor) {
+      repaint(viewer.deferCursorUpdates,
+	      oldX - hotX, oldY - hotY, cursorWidth, cursorHeight);
+      repaint(viewer.deferCursorUpdates,
+	      cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
+    }
   }
 
   //
@@ -1431,7 +1488,6 @@ class VncCanvas extends Canvas
       showSoftCursor = false;
       softCursor = null;
       softCursorSource = null;
-      softCursorPixels = null;
 
       repaint(viewer.deferCursorUpdates,
 	      cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);

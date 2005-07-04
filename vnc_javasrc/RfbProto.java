@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2001,2002 HorizonLive.com, Inc.  All Rights Reserved.
+//  Copyright (C) 2001-2004 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2001,2002 Constantin Kaplinsky.  All Rights Reserved.
 //  Copyright (C) 2000 Tridia Corporation.  All Rights Reserved.
 //  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
@@ -32,17 +32,63 @@ import java.util.zip.*;
 
 class RfbProto {
 
-  final String versionMsg = "RFB 003.003\n";
-  final static int ConnFailed = 0, NoAuth = 1, VncAuth = 2;
-  final static int VncAuthOK = 0, VncAuthFailed = 1, VncAuthTooMany = 2;
+  final static String
+    versionMsg_3_3 = "RFB 003.003\n",
+    versionMsg_3_7 = "RFB 003.007\n";
 
-  final static int FramebufferUpdate = 0, SetColourMapEntries = 1, Bell = 2,
-    ServerCutText = 3;
+  // Vendor signatures: standard VNC/RealVNC, TridiaVNC, and TightVNC
+  final static String
+    StandardVendor  = "STDV",
+    TridiaVncVendor = "TRDV",
+    TightVncVendor  = "TGHT";
 
-  final int SetPixelFormat = 0, FixColourMapEntries = 1, SetEncodings = 2,
-    FramebufferUpdateRequest = 3, KeyboardEvent = 4, PointerEvent = 5,
-    ClientCutText = 6;
+  // Security types
+  final static int
+    SecTypeInvalid = 0,
+    SecTypeNone    = 1,
+    SecTypeVncAuth = 2,
+    SecTypeTight   = 16;
 
+  // Supported tunneling types
+  final static int
+    NoTunneling = 0;
+  final static String
+    SigNoTunneling = "NOTUNNEL";
+
+  // Supported authentication types
+  final static int
+    AuthNone      = 1,
+    AuthVNC       = 2,
+    AuthUnixLogin = 129;
+  final static String
+    SigAuthNone      = "NOAUTH__",
+    SigAuthVNC       = "VNCAUTH_",
+    SigAuthUnixLogin = "ULGNAUTH";
+
+  // VNC authentication results
+  final static int
+    VncAuthOK      = 0,
+    VncAuthFailed  = 1,
+    VncAuthTooMany = 2;
+
+  // Server-to-client messages
+  final static int
+    FramebufferUpdate   = 0,
+    SetColourMapEntries = 1,
+    Bell                = 2,
+    ServerCutText       = 3;
+
+  // Client-to-server messages
+  final static int
+    SetPixelFormat           = 0,
+    FixColourMapEntries      = 1,
+    SetEncodings             = 2,
+    FramebufferUpdateRequest = 3,
+    KeyboardEvent            = 4,
+    PointerEvent             = 5,
+    ClientCutText            = 6;
+
+  // Supported encodings and pseudo-encodings
   final static int
     EncodingRaw            = 0,
     EncodingCopyRect       = 1,
@@ -58,24 +104,43 @@ class RfbProto {
     EncodingPointerPos     = 0xFFFFFF18,
     EncodingLastRect       = 0xFFFFFF20,
     EncodingNewFBSize      = 0xFFFFFF21;
+  final static String
+    SigEncodingRaw            = "RAW_____",
+    SigEncodingCopyRect       = "COPYRECT",
+    SigEncodingRRE            = "RRE_____",
+    SigEncodingCoRRE          = "CORRE___",
+    SigEncodingHextile        = "HEXTILE_",
+    SigEncodingZlib           = "ZLIB____",
+    SigEncodingTight          = "TIGHT___",
+    SigEncodingCompressLevel0 = "COMPRLVL",
+    SigEncodingQualityLevel0  = "JPEGQLVL",
+    SigEncodingXCursor        = "X11CURSR",
+    SigEncodingRichCursor     = "RCHCURSR",
+    SigEncodingPointerPos     = "POINTPOS",
+    SigEncodingLastRect       = "LASTRECT",
+    SigEncodingNewFBSize      = "NEWFBSIZ";
 
   final static int MaxNormalEncoding = 7;
 
-  final int HextileRaw			= (1 << 0);
-  final int HextileBackgroundSpecified	= (1 << 1);
-  final int HextileForegroundSpecified	= (1 << 2);
-  final int HextileAnySubrects		= (1 << 3);
-  final int HextileSubrectsColoured	= (1 << 4);
+  // Contstants used in the Hextile decoder
+  final static int
+    HextileRaw                 = 1,
+    HextileBackgroundSpecified = 2,
+    HextileForegroundSpecified = 4,
+    HextileAnySubrects         = 8,
+    HextileSubrectsColoured    = 16;
 
-  final static int TightExplicitFilter  = 0x04;
-  final static int TightFill            = 0x08;
-  final static int TightJpeg            = 0x09;
-  final static int TightMaxSubencoding  = 0x09;
-  final static int TightFilterCopy      = 0x00;
-  final static int TightFilterPalette   = 0x01;
-  final static int TightFilterGradient  = 0x02;
+  // Contstants used in the Tight decoder
+  final static int TightMinToCompress = 12;
+  final static int
+    TightExplicitFilter = 0x04,
+    TightFill           = 0x08,
+    TightJpeg           = 0x09,
+    TightMaxSubencoding = 0x09,
+    TightFilterCopy     = 0x00,
+    TightFilterPalette  = 0x01,
+    TightFilterGradient = 0x02;
 
-  final static int TightMinToCompress   = 12;
 
   String host;
   int port;
@@ -113,6 +178,14 @@ class RfbProto {
   // timestamp, to let the player show initial desktop before
   // playback.
   int numUpdatesInSession;
+
+  // Protocol version and TightVNC-specific protocol options.
+  int serverMajor, serverMinor;
+  int clientMajor, clientMinor;
+  boolean protocolTightVNC;
+  CapsContainer tunnelCaps, authCaps;
+  CapsContainer serverMsgCaps, clientMsgCaps;
+  CapsContainer encodingCaps;
 
   // If true, informs that the RFB socket was closed.
   private boolean closed;
@@ -169,8 +242,6 @@ class RfbProto {
   // Read server's protocol version message
   //
 
-  int serverMajor, serverMinor;
-
   void readVersionMsg() throws Exception {
 
     byte[] b = new byte[12];
@@ -189,6 +260,10 @@ class RfbProto {
 
     serverMajor = (b[4] - '0') * 100 + (b[5] - '0') * 10 + (b[6] - '0');
     serverMinor = (b[8] - '0') * 100 + (b[9] - '0') * 10 + (b[10] - '0');
+
+    if (serverMajor < 3) {
+      throw new Exception("RFB server does not support protocol version 3");
+    }
   }
 
 
@@ -197,36 +272,214 @@ class RfbProto {
   //
 
   void writeVersionMsg() throws IOException {
-    os.write(versionMsg.getBytes());
+    clientMajor = 3;
+    if (serverMajor > 3 || serverMinor >= 7) {
+      clientMinor = 7;
+      os.write(versionMsg_3_7.getBytes());
+    } else {
+      clientMinor = 3;
+      os.write(versionMsg_3_3.getBytes());
+    }
+    protocolTightVNC = false;
   }
 
 
   //
-  // Find out the authentication scheme.
+  // Negotiate the authentication scheme.
   //
 
-  int readAuthScheme() throws Exception {
-    int authScheme = is.readInt();
+  int negotiateSecurity() throws Exception {
+    return (clientMinor >= 7) ?
+      selectSecurityType() : readSecurityType();
+  }
 
-    switch (authScheme) {
+  //
+  // Read security type from the server (protocol version 3.3).
+  //
 
-    case ConnFailed:
-      int reasonLen = is.readInt();
-      byte[] reason = new byte[reasonLen];
-      is.readFully(reason);
-      throw new Exception(new String(reason));
+  int readSecurityType() throws Exception {
+    int secType = is.readInt();
 
-    case NoAuth:
-    case VncAuth:
-      return authScheme;
-
+    switch (secType) {
+    case SecTypeInvalid:
+      readConnFailedReason();
+      return SecTypeInvalid;	// should never be executed
+    case SecTypeNone:
+    case SecTypeVncAuth:
+      return secType;
     default:
-      throw new Exception("Unknown authentication scheme from RFB server: " +
-			  authScheme);
-
+      throw new Exception("Unknown security type from RFB server: " + secType);
     }
   }
 
+  //
+  // Select security type from the server's list (protocol version 3.7).
+  //
+
+  int selectSecurityType() throws Exception {
+    int secType = SecTypeInvalid;
+
+    // Read the list of secutiry types.
+    int nSecTypes = is.readUnsignedByte();
+    if (nSecTypes == 0) {
+      readConnFailedReason();
+      return SecTypeInvalid;	// should never be executed
+    }
+    byte[] secTypes = new byte[nSecTypes];
+    is.readFully(secTypes);
+
+    // Find out if the server supports TightVNC protocol extensions
+    for (int i = 0; i < nSecTypes; i++) {
+      if (secTypes[i] == SecTypeTight) {
+	protocolTightVNC = true;
+	os.write(SecTypeTight);
+	return SecTypeTight;
+      }
+    }
+
+    // Find first supported security type.
+    for (int i = 0; i < nSecTypes; i++) {
+      if (secTypes[i] == SecTypeNone || secTypes[i] == SecTypeVncAuth) {
+	secType = secTypes[i];
+	break;
+      }
+    }
+
+    if (secType == SecTypeInvalid) {
+      throw new Exception("Server did not offer supported security type");
+    } else {
+      os.write(secType);
+    }
+
+    return secType;
+  }
+
+  //
+  // Read the string describing the reason for a connection failure,
+  // and throw an exception.
+  //
+
+  void readConnFailedReason() throws Exception {
+    int reasonLen = is.readInt();
+    byte[] reason = new byte[reasonLen];
+    is.readFully(reason);
+    throw new Exception(new String(reason));
+  }
+
+  //
+  // Initialize capability lists (protocol 3.7t).
+  //
+
+  void initCapabilities() {
+    tunnelCaps    = new CapsContainer();
+    authCaps      = new CapsContainer();
+    serverMsgCaps = new CapsContainer();
+    clientMsgCaps = new CapsContainer();
+    encodingCaps  = new CapsContainer();
+
+    // Supported authentication methods
+    authCaps.add(AuthNone, StandardVendor, SigAuthNone,
+		 "No authentication");
+    authCaps.add(AuthVNC, StandardVendor, SigAuthVNC,
+		 "Standard VNC password authentication");
+    authCaps.add(AuthUnixLogin, TightVncVendor, SigAuthUnixLogin,
+		 "Login-style Unix authentication");
+
+    // Supported encoding types
+    encodingCaps.add(EncodingCopyRect, StandardVendor,
+		     SigEncodingCopyRect, "Standard CopyRect encoding");
+    encodingCaps.add(EncodingRRE, StandardVendor,
+		     SigEncodingRRE, "Standard RRE encoding");
+    encodingCaps.add(EncodingCoRRE, StandardVendor,
+		     SigEncodingCoRRE, "Standard CoRRE encoding");
+    encodingCaps.add(EncodingHextile, StandardVendor,
+		     SigEncodingHextile, "Standard Hextile encoding");
+    encodingCaps.add(EncodingZlib, TridiaVncVendor,
+		     SigEncodingZlib, "Zlib encoding");
+    encodingCaps.add(EncodingTight, TightVncVendor,
+		     SigEncodingTight, "Tight encoding");
+
+    // Supported pseudo-encoding types
+    encodingCaps.add(EncodingCompressLevel0, TightVncVendor,
+		     SigEncodingCompressLevel0, "Compression level");
+    encodingCaps.add(EncodingQualityLevel0, TightVncVendor,
+		     SigEncodingQualityLevel0, "JPEG quality level");
+    encodingCaps.add(EncodingXCursor, TightVncVendor,
+		     SigEncodingXCursor, "X-style cursor shape update");
+    encodingCaps.add(EncodingRichCursor, TightVncVendor,
+		     SigEncodingRichCursor, "Rich-color cursor shape update");
+    encodingCaps.add(EncodingPointerPos, TightVncVendor,
+		     SigEncodingPointerPos, "Pointer position update");
+    encodingCaps.add(EncodingLastRect, TightVncVendor,
+		     SigEncodingLastRect, "LastRect protocol extension");
+    encodingCaps.add(EncodingNewFBSize, TightVncVendor,
+		     SigEncodingNewFBSize, "Framebuffer size change");
+  }
+
+  //
+  // Setup tunneling (protocol version 3.7t)
+  //
+
+  void setupTunneling() throws IOException {
+    int nTunnelTypes = is.readInt();
+    if (nTunnelTypes != 0) {
+      readCapabilityList(tunnelCaps, nTunnelTypes);
+
+      // We don't support tunneling yet.
+      writeInt(NoTunneling);
+    }
+  }
+
+  //
+  // Negotiate authentication scheme (protocol version 3.7t)
+  //
+
+  int negotiateAuthenticationTight() throws Exception {
+    int nAuthTypes = is.readInt();
+    if (nAuthTypes == 0)
+      return AuthNone;
+
+    readCapabilityList(authCaps, nAuthTypes);
+    for (int i = 0; i < authCaps.numEnabled(); i++) {
+      int authType = authCaps.getByOrder(i);
+      if (authType == AuthNone ||
+	  authType == AuthVNC  ||
+	  authType == AuthUnixLogin) {
+	writeInt(authType);
+	return authType;
+      }
+    }
+    throw new Exception("No suitable authentication scheme found");
+  }
+
+  //
+  // Read a capability list (protocol version 3.7t)
+  //
+
+  void readCapabilityList(CapsContainer caps, int count) throws IOException {
+    int code;
+    byte[] vendor = new byte[4];
+    byte[] name = new byte[8];
+    for (int i = 0; i < count; i++) {
+      code = is.readInt();
+      is.readFully(vendor);
+      is.readFully(name);
+      caps.enable(new CapabilityInfo(code, vendor, name));
+    }
+  }
+
+  //
+  // Write a 32-bit integer into the output stream.
+  //
+
+  void writeInt(int value) throws IOException {
+    byte[] b = new byte[4];
+    b[0] = (byte) ((value >> 24) & 0xff);
+    b[1] = (byte) ((value >> 16) & 0xff);
+    b[2] = (byte) ((value >> 8) & 0xff);
+    b[3] = (byte) (value & 0xff);
+    os.write(b);
+  }
 
   //
   // Write the client initialisation message
@@ -272,6 +525,17 @@ class RfbProto {
     is.readFully(name);
     desktopName = new String(name);
 
+    // Read interaction capabilities (protocol 3.7t)
+    if (protocolTightVNC) {
+      int nServerMessageTypes = is.readUnsignedShort();
+      int nClientMessageTypes = is.readUnsignedShort();
+      int nEncodingTypes = is.readUnsignedShort();
+      is.readUnsignedShort();
+      readCapabilityList(serverMsgCaps, nServerMessageTypes);
+      readCapabilityList(clientMsgCaps, nClientMessageTypes);
+      readCapabilityList(encodingCaps, nEncodingTypes);
+    }
+
     inNormalProtocol = true;
   }
 
@@ -283,8 +547,8 @@ class RfbProto {
   void startSession(String fname) throws IOException {
     rec = new SessionRecorder(fname);
     rec.writeHeader();
-    rec.write(versionMsg.getBytes());
-    rec.writeIntBE(NoAuth);
+    rec.write(versionMsg_3_3.getBytes());
+    rec.writeIntBE(SecTypeNone);
     rec.writeShortBE(framebufferWidth);
     rec.writeShortBE(framebufferHeight);
     byte[] fbsServerInitMsg =	{

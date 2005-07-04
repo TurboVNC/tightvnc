@@ -1,9 +1,9 @@
 
-TightVNC Java Viewer version 1.2.9
-==================================
+TightVNC Java Viewer version 1.3dev7
+====================================
 
-Copyright (C) 2001,2002,2003 HorizonLive.com, Inc.  All Rights Reserved.
-Copyright (C) 2001,2002,2003 Constantin Kaplinsky.  All Rights Reserved.
+Copyright (C) 2001-2004 HorizonLive.com, Inc.  All Rights Reserved.
+Copyright (C) 2001-2005 Constantin Kaplinsky.  All Rights Reserved.
 Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
 
 This software is distributed under the GNU General Public Licence as
@@ -67,6 +67,10 @@ There are three basic ways to use TightVNC Java viewer:
      should be created which will act as a the base document for the viewer
      applet (see an example named index.html in this distribution).
 
+     NOTE: Provided index.html page is an example only. Before using that
+     file, edit it with a text editor. See more information inside
+     index.html.
+
   3. Running the viewer as a standalone application.
 
      Finally, the Java viewer can be executed locally on the client machine,
@@ -112,7 +116,7 @@ is the full list of parameters supported in TightVNC Java viewer:
 
 --> "PASSWORD"
 
-    Value: session password in plan text.
+    Value: session password in plain text.
     Default: none, ask user.
 
     DO NOT EVER USE THIS PARAMETER, unless you really know what you are
@@ -216,6 +220,15 @@ is the full list of parameters supported in TightVNC Java viewer:
 
     If set to "Yes", then all keyboard and mouse events in the desktop window
     will be silently ignored and will not be passed to the remote side.
+
+--> "Scale remote cursor"
+
+    Values: "No", "50%", "75%", "125%", "150%".
+    Default: "No".
+
+    If a percentage value is specified, the remote cursor is reduced
+    or enlarged accordingly. Scaling takes place only when "View only"
+    is set to "No", and "Cursor shape updates" is set to "Enable".
 
 --> "Share desktop"
 

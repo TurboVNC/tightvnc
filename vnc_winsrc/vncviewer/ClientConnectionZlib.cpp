@@ -31,7 +31,7 @@
 #include "stdhdrs.h"
 #include "vncviewer.h"
 #include "ClientConnection.h"
-#include "zlib\zlib.h"
+#include "zlib/zlib.h"
 
 void ClientConnection::ReadZlibRect(rfbFramebufferUpdateRectHeader *pfburh) {
 

@@ -152,6 +152,9 @@ static XtResource appDataResourceList[] = {
   {"passwordFile", "PasswordFile", XtRString, sizeof(String),
    XtOffsetOf(AppData, passwordFile), XtRImmediate, (XtPointer) 0},
 
+  {"userLogin", "UserLogin", XtRString, sizeof(String),
+   XtOffsetOf(AppData, userLogin), XtRImmediate, (XtPointer) 0},
+
   {"passwordDialog", "PasswordDialog", XtRBool, sizeof(Bool),
    XtOffsetOf(AppData, passwordDialog), XtRImmediate, (XtPointer) False},
 
@@ -220,6 +223,9 @@ static XtResource appDataResourceList[] = {
 
   {"grabKeyboard", "GrabKeyboard", XtRBool, sizeof(Bool),
    XtOffsetOf(AppData, grabKeyboard), XtRImmediate, (XtPointer) False},
+
+  {"autoPass", "AutoPass", XtRBool, sizeof(Bool),
+   XtOffsetOf(AppData, autoPass), XtRImmediate, (XtPointer) False}
 };
 
 
@@ -235,6 +241,7 @@ XrmOptionDescRec cmdLineOptions[] = {
   {"-fullscreen",    "*fullScreen",         XrmoptionNoArg,  "True"},
   {"-noraiseonbeep", "*raiseOnBeep",        XrmoptionNoArg,  "False"},
   {"-passwd",        "*passwordFile",       XrmoptionSepArg, 0},
+  {"-user",          "*userLogin",          XrmoptionSepArg, 0},
   {"-encodings",     "*encodings",          XrmoptionSepArg, 0},
   {"-bgr233",        "*useBGR233",          XrmoptionNoArg,  "True"},
   {"-owncmap",       "*forceOwnCmap",       XrmoptionNoArg,  "True"},
@@ -246,6 +253,7 @@ XrmOptionDescRec cmdLineOptions[] = {
   {"-nojpeg",        "*enableJPEG",         XrmoptionNoArg,  "False"},
   {"-nocursorshape", "*useRemoteCursor",    XrmoptionNoArg,  "False"},
   {"-x11cursor",     "*useX11Cursor",       XrmoptionNoArg,  "True"},
+  {"-autopass",      "*autoPass",           XrmoptionNoArg,  "True"}
 
 };
 
@@ -295,7 +303,7 @@ void
 usage(void)
 {
   fprintf(stderr,
-	  "TightVNC viewer version 1.2.9\n"
+	  "TightVNC viewer version 1.3dev7\n"
 	  "\n"
 	  "Usage: %s [<OPTIONS>] [<HOST>][:<DISPLAY#>]\n"
 	  "       %s [<OPTIONS>] [<HOST>][::<PORT#>]\n"
@@ -309,7 +317,8 @@ usage(void)
 	  "        -viewonly\n"
 	  "        -fullscreen\n"
 	  "        -noraiseonbeep\n"
-	  "        -passwd <PASSWD-FILENAME>\n"
+	  "        -passwd <PASSWD-FILENAME> (standard VNC authentication)\n"
+	  "        -user <USERNAME> (Unix login authentication)\n"
 	  "        -encodings <ENCODING-LIST> (e.g. \"tight copyrect\")\n"
 	  "        -bgr233\n"
 	  "        -owncmap\n"
@@ -320,6 +329,7 @@ usage(void)
 	  "        -nojpeg\n"
 	  "        -nocursorshape\n"
 	  "        -x11cursor\n"
+	  "        -autopass\n"
 	  "\n"
 	  "Option names may be abbreviated, e.g. -bgr instead of -bgr233.\n"
 	  "See the manual page for more information."

@@ -3,7 +3,10 @@ WinVNC.opt
 WinVNC.plg
 WinVNC.aps
 WinVNC.log*
+appshare.log*
 Debug
 Release
 Profile
-No_CORBA
+HorizonLive
+HTMLHELP.LIB
+HTMLHELP.H

@@ -179,7 +179,7 @@ class AuthPanel extends Panel implements ActionListener {
     }
 
     byte[] challenge = new byte[16];
-    rfb.is.readFully(challenge);
+    rfb.readFully(challenge);
 
     if (pw.length() > 8)
       pw = pw.substring(0, 8);	// Truncate to 8 chars

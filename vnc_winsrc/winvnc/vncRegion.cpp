@@ -46,7 +46,7 @@ vncRegion::~vncRegion()
 	Clear();
 }
 
-void vncRegion::AddRect(RECT &new_rect)
+void vncRegion::AddRect(const RECT &new_rect)
 {
 	HRGN newregion;
 
@@ -67,6 +67,15 @@ void vncRegion::AddRect(RECT &new_rect)
 		// Now delete the temporary region
 		DeleteObject(newregion);
 	}
+}
+
+void vncRegion::AddRect(RECT R, int xoffset, int yoffset)
+{
+	R.left += xoffset;
+	R.top += yoffset;
+	R.right += xoffset;
+	R.bottom += yoffset;
+	AddRect(R);
 }
 
 void vncRegion::SubtractRect(RECT &new_rect)

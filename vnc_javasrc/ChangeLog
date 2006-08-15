@@ -1,3 +1,62 @@
+2006-08-10 17:26  const_k
+
+	* README: Version string and copyright info changed, version 1.3.8.
+
+2006-06-15 20:43  const_k
+
+	* README: Version string changed for version 1.3dev8.
+
+2006-06-15 20:38  const_k
+
+	* README: Updated description of the "Encoding" parameter that now
+	can be set and defaults to "Auto".
+
+2005-10-03 22:51  const_k
+
+	* VncCanvas.java, VncViewer.java: Improved the
+	VncViewer.setEncodings() method. Now it does not build the complete
+	encoding list when auto-selecting encodings.
+
+2005-10-03 22:26  const_k
+
+	* VncCanvas.java, VncViewer.java: Implemented encoding auto
+	selection based on measuring current network throughput.
+
+2005-10-03 20:25  const_k
+
+	* OptionsFrame.java, VncViewer.java: Improved encoding selection
+	code. Also, now we request compression and quality levels
+	regardless of current preferred encoding and color format.
+
+2005-10-03 09:52  const_k
+
+	* OptionsFrame.java, VncViewer.java: Now the encoding array is
+	prepared in the VncViewer.setEncodings() method, instead of
+	OptionsFrame.setEncodings(). This will allow to implement auto
+	encoding selection in VncViewer.setEncodings().
+
+2005-10-03 08:32  const_k
+
+	* Makefile: Added JCFLAGS variable for javac command-line flags.
+
+2005-09-30 19:42  const_k
+
+	* Makefile: Reverted accidental change included in the previous
+	commit.
+
+2005-09-30 19:27  const_k
+
+	* AuthPanel.java, Makefile, RfbProto.java, VncCanvas.java:
+	Measuring network throughput. This will allow auto encoding
+	selection work properly.
+
+2005-09-30 10:38  const_k
+
+	* OptionsFrame.java: Starting implementation of automatic encoding
+	selection. Right now, the "Auto" choice in the encoding list is
+	equivalent to "Tight", but without an option to set the compression
+	level.
+
 2005-07-03 16:03  const_k
 
 	* README: Version string changed for version 1.3dev7.

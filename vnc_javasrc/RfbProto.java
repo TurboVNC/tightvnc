@@ -179,6 +179,11 @@ class RfbProto {
   // playback.
   int numUpdatesInSession;
 
+  // Measuring network throughput.
+  boolean timing;
+  long timeWaitedIn100us;
+  long timedKbits;
+
   // Protocol version and TightVNC-specific protocol options.
   int serverMajor, serverMinor;
   int clientMajor, clientMinor;
@@ -217,6 +222,10 @@ class RfbProto {
     is = new DataInputStream(new BufferedInputStream(sock.getInputStream(),
 						     16384));
     os = sock.getOutputStream();
+
+    timing = false;
+    timeWaitedIn100us = 5;
+    timedKbits = 0;
   }
 
 
@@ -246,7 +255,7 @@ class RfbProto {
 
     byte[] b = new byte[12];
 
-    is.readFully(b);
+    readFully(b);
 
     if ((b[0] != 'R') || (b[1] != 'F') || (b[2] != 'B') || (b[3] != ' ')
 	|| (b[4] < '0') || (b[4] > '9') || (b[5] < '0') || (b[5] > '9')
@@ -326,7 +335,7 @@ class RfbProto {
       return SecTypeInvalid;	// should never be executed
     }
     byte[] secTypes = new byte[nSecTypes];
-    is.readFully(secTypes);
+    readFully(secTypes);
 
     // Find out if the server supports TightVNC protocol extensions
     for (int i = 0; i < nSecTypes; i++) {
@@ -362,7 +371,7 @@ class RfbProto {
   void readConnFailedReason() throws Exception {
     int reasonLen = is.readInt();
     byte[] reason = new byte[reasonLen];
-    is.readFully(reason);
+    readFully(reason);
     throw new Exception(new String(reason));
   }
 
@@ -462,8 +471,8 @@ class RfbProto {
     byte[] name = new byte[8];
     for (int i = 0; i < count; i++) {
       code = is.readInt();
-      is.readFully(vendor);
-      is.readFully(name);
+      readFully(vendor);
+      readFully(name);
       caps.enable(new CapabilityInfo(code, vendor, name));
     }
   }
@@ -519,10 +528,10 @@ class RfbProto {
     greenShift = is.readUnsignedByte();
     blueShift = is.readUnsignedByte();
     byte[] pad = new byte[3];
-    is.readFully(pad);
+    readFully(pad);
     int nameLength = is.readInt();
     byte[] name = new byte[nameLength];
-    is.readFully(name);
+    readFully(name);
     desktopName = new String(name);
 
     // Read interaction capabilities (protocol 3.7t)
@@ -706,10 +715,10 @@ class RfbProto {
 
   String readServerCutText() throws IOException {
     byte[] pad = new byte[3];
-    is.readFully(pad);
+    readFully(pad);
     int len = is.readInt();
     byte[] text = new byte[len];
-    is.readFully(text);
+    readFully(text);
     return new String(text);
   }
 
@@ -1177,5 +1186,56 @@ class RfbProto {
     }
     rec.write(buf, 0, bytes);
   }
-}
 
+  public void startTiming() {
+    timing = true;
+
+    // Carry over up to 1s worth of previous rate for smoothing.
+
+    if (timeWaitedIn100us > 10000) {
+      timedKbits = timedKbits * 10000 / timeWaitedIn100us;
+      timeWaitedIn100us = 10000;
+    }
+  }
+
+  public void stopTiming() {
+    timing = false; 
+    if (timeWaitedIn100us < timedKbits/2)
+      timeWaitedIn100us = timedKbits/2; // upper limit 20Mbit/s
+  }
+
+  public long kbitsPerSecond() {
+    return timedKbits * 10000 / timeWaitedIn100us;
+  }
+
+  public long timeWaited() {
+    return timeWaitedIn100us;
+  }
+
+  public void readFully(byte b[]) throws IOException {
+    readFully(b, 0, b.length);
+  }
+
+  public void readFully(byte b[], int off, int len) throws IOException {
+    long before = 0;
+    if (timing)
+      before = System.currentTimeMillis();
+
+    is.readFully(b, off, len);
+
+    if (timing) {
+      long after = System.currentTimeMillis();
+      long newTimeWaited = (after - before) * 10;
+      int newKbits = len * 8 / 1000;
+
+      // limit rate to between 10kbit/s and 40Mbit/s
+
+      if (newTimeWaited > newKbits*1000) newTimeWaited = newKbits*1000;
+      if (newTimeWaited < newKbits/4)    newTimeWaited = newKbits/4;
+
+      timeWaitedIn100us += newTimeWaited;
+      timedKbits += newKbits;
+    }
+  }
+
+}

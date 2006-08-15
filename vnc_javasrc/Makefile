@@ -4,6 +4,7 @@
 
 CP = cp
 JC = javac
+JCFLAGS = -target 1.1
 JAR = jar
 ARCHIVE = VncViewer.jar
 MANIFEST = MANIFEST.MF
@@ -27,7 +28,7 @@ SOURCES = VncViewer.java RfbProto.java AuthPanel.java VncCanvas.java \
 all: $(CLASSES) $(ARCHIVE)
 
 $(CLASSES): $(SOURCES)
-	$(JC) -target 1.1 -O $(SOURCES)
+	$(JC) $(JCFLAGS) -O $(SOURCES)
 
 $(ARCHIVE): $(CLASSES) $(MANIFEST)
 	$(JAR) cfm $(ARCHIVE) $(MANIFEST) $(CLASSES)

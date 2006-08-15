@@ -108,8 +108,6 @@ private:
 	void PerformAuthenticationTight();
 	void Authenticate(CARD32 authScheme);
 	bool AuthenticateVNC(char *errBuf, int errBufSize, bool *again);
-	bool AuthenticateUnixLogin(char *errBuf, int errBufSize, bool *again);
-	bool AuthenticateExternal(char *errBuf, int errBufSize, bool *again);
 	void ReadServerInit();
 	void ReadInteractionCaps();
 	void ReadCapabilityList(CapsContainer *caps, int count);
@@ -329,8 +327,6 @@ private:
 
 	TCHAR *m_desktopName;
 	unsigned char m_encPasswd[8];
-	char m_usernameExt[256];
-	unsigned char m_encPasswdExt[512];
 	int m_authScheme;
 	rfbServerInitMsg m_si;
 	rfbPixelFormat m_myFormat, m_pendingFormat;

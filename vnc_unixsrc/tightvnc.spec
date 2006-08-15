@@ -1,6 +1,6 @@
 Summary:   A remote display system.
 Name:      tightvnc
-Version:   1.3dev7
+Version:   1.3.8
 Release:   1
 URL:       http://www.tightvnc.com/
 Source0:   tightvnc-%{version}_unixsrc.tar.bz2
@@ -134,6 +134,9 @@ fi
 %{_mandir}/man1/vncpasswd.1*
 
 %changelog
+* Fri Aug 11 2006 Constantin Kaplinsky <const@tightvnc.com>
+- Version 1.3.8.
+
 * Sun Jul 03 2005 Constantin Kaplinsky <const@tightvnc.com>
 - Removed vnc-server's dependence on XFree86, changed maintainer's
   e-mail address, TightVNC updated to 1.3dev7.

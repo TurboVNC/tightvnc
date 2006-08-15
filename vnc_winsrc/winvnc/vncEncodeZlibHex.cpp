@@ -119,8 +119,8 @@ vncEncodeZlibHex::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const R
 
 	// Create the rectangle header
 	rfbFramebufferUpdateRectHeader *surh=(rfbFramebufferUpdateRectHeader *)dest;
-	surh->r.x = (CARD16) rect.left - offx;
-	surh->r.y = (CARD16) rect.top - offy;
+	surh->r.x = (CARD16) (rect.left - offx);
+	surh->r.y = (CARD16) (rect.top - offy);
 	surh->r.w = (CARD16) (rectW);
 	surh->r.h = (CARD16) (rectH);
 	surh->r.x = Swap16IfLE(surh->r.x);

@@ -1,3 +1,247 @@
+2006-08-15 20:37  const_k
+
+	* BUILDING.txt: Building information had to be updated to reflect
+	including libraries in the source distribution.
+
+2006-08-15 10:50  const_k
+
+	* winvnc/: vncMenu.cpp, vncProperties.cpp, vncProperties.h: In
+	certain cases we do not want to remember or restore current tab
+	selection in the Properties dialog. In particular, tab selection is
+	not restored or saved when editing the default properties. Also,
+	tab selection is reset when connecting or disconnecting clients.
+
+2006-08-14 16:20  const_k
+
+	* winvnc/WinVNC.rc: Improved labels for tray menu commands.
+
+2006-08-10 17:03  const_k
+
+	* winvnc/: InputHandlingControls.cpp, InputHandlingControls.h:
+	Fixed a minor issue with keyboard focus initially set to
+	"Inactivity timeout" control, in the Properties dialog, Server tab.
+	Normally, keyboard focus should be set to the Password control
+	instead.
+
+2006-08-10 16:35  const_k
+
+	* BUILDING.txt, README-bin.txt, README.txt, TightVNC.iss,
+	vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Version strings changed, version
+	1.3.8.
+
+2006-08-10 15:27  const_k
+
+	* vncviewer/res/vncviewer.rc: Copyright sign was missing in version
+	info.
+
+2006-08-10 15:07  const_k
+
+	* BUILDING.txt, InstInfo.rtf, README-bin.txt, README.txt,
+	TightVNC.iss, vncviewer/res/vncviewer.rc, winvnc/WinVNC.rc,
+	winvnc/VNCHooks/VNCHooks.rc: Preparing for stable version numbering
+	- replaced 1.3dev7 with 1.3.7, removed "unstable" labels etc.
+
+2006-08-05 13:19  const_k
+
+	* winvnc/vncDesktop.cpp: Disabling mirror driver support under NT4
+	completely. Driver support was broken under NT4, it detected the
+	driver and "used" it even if it was not installed. Thus, updates
+	were not detected properly.
+
+2006-08-05 12:12  const_k
+
+	* winvnc/: vncClient.cpp, vncClient.h: Reverted changes to
+	vncClient::m_inputblocked incremental semantics introduced in a
+	previously applied patch from Lev Kazarkin of Demoforge, LLC.  This
+	should fix LocalInputsPriority feature that was broken by that
+	patch.
+
+2006-08-02 12:51  const_k
+
+	* winvnc/WinVNC.h: WinVNC usage help did not include information
+	about the argument of the -sharearea option.
+
+2006-08-02 12:36  const_k
+
+	* winvnc/: WinVNC.cpp, vncMenu.cpp, vncProperties.h,
+	vncService.cpp, vncService.h: New -sharearea command-line option of
+	WInVNC is now fully functional.
+
+2006-08-01 23:27  const_k
+
+	* winvnc/: WinVNC.cpp, WinVNC.h, vncMenu.cpp, vncMenu.h,
+	vncService.cpp, vncService.h: New -shareall and -shareprimary
+	command-line options have been implemented.  They work similar to
+	-sharewindow but do not require arguments. These options do not
+	start WinVNC - they control already running WinVNC instance
+	instead.  These modification also introduce the -sharearea option,
+	but it's not fully functional at the moment.
+
+2006-08-01 22:25  const_k
+
+	* winvnc/SharedDesktopArea.cpp: Restoring correct state of the area
+	selection window on cancelling the Properties dialog.
+
+2006-08-01 20:09  const_k
+
+	* winvnc/: SharedDesktopArea.cpp, SharedDesktopArea.h,
+	vncProperties.cpp, vncProperties.h: Improved and simplified the
+	SharedDesktopArea class, removed related stuff from the Properties
+	class. Now the changes are applied directly to the server object,
+	and only on pressing Apply or Ok. Previously, the changes in the
+	Display tab of the Properties dialog were applied immediately and
+	remained active even on pressing Cancel. Obviously, that was
+	incorrect.
+
+2006-07-30 16:27  const_k
+
+	* winvnc/SharedDesktopArea.cpp: Changes only in code formatting and
+	comments.
+
+2006-06-15 20:57  const_k
+
+	* winvnc/res/: AuthPanel.class, OptionsFrame.class, RfbProto.class,
+	VncCanvas.class, VncViewer.class, VncViewer.jar: Built-in Java
+	viewer updated to the latest version.
+
+2006-06-15 11:49  const_k
+
+	* winvnc/: WinVNC.rc, resource.h: GUI improvements in the
+	Administration tab of the Properties dialog.
+
+2006-06-15 11:04  const_k
+
+	* winvnc/vncProperties.cpp: The "Sharing" tab of the Properties
+	dialog renamed to "Desktop".
+
+2006-06-15 10:57  const_k
+
+	* winvnc/: WinVNC.rc, resource.h: GUI improvements in the Query tab
+	of the Properties dialog.
+
+2006-06-15 10:34  const_k
+
+	* winvnc/: WinVNC.rc, resource.h: GUI improvements in the Hooks tab
+	of the Properties dialog.
+
+2006-06-15 09:55  const_k
+
+	* winvnc/: VideoDriver.cpp, VideoDriver.h: Updated heading comment
+	and copyright strings.
+
+2006-06-14 23:42  const_k
+
+	* winvnc/: WinVNC.sln, VNCHooks/VNCHooks.vcproj,
+	libjpeg/libjpeg.vcproj, omnithread/omnithread.vcproj,
+	WinVNC.vcproj, zlib/zlib.vcproj: From Lev Kazarkin (DemoForge LLC):
+	- fixed WinVNC *.vcproj files for MSVC 7.1.
+
+2006-06-14 23:28  const_k
+
+	* vncviewer/vncviewer.dsw, vncviewer/vncviewer.sln,
+	vncviewer/vncviewer.vcproj, vncviewer/libjpeg/libjpeg.vcproj,
+	vncviewer/omnithread/omnithread.vcproj, vncviewer/zlib/zlib.vcproj,
+	winvnc/WinVNC.dsw, winvnc/WinVNC.sln, winvnc/WinVNC.vcproj,
+	winvnc/VNCHooks/VNCHooks.dsp, winvnc/VNCHooks/VNCHooks.vcproj,
+	winvnc/libjpeg/libjpeg.vcproj, winvnc/omnithread/omnithread.vcproj,
+	winvnc/zlib/zlib.vcproj: Fixed end-of-line characters.
+
+2006-06-14 22:43  const_k
+
+	* winvnc/: SharedDesktopArea.cpp, VideoDriver.cpp, VideoDriver.h,
+	vncDesktop.cpp, vncDesktop.h, vncEncoder.cpp, vncServer.cpp,
+	vncServer.h: Another set of changes by Lev Kazarkin (DemoForge
+	LLC): - fixed bug with lost notifications from Mirage driver; -
+	fixed bugs with CopyRect processing; - added support for CopyRect
+	notifications from Mirage driver (more accurate and more powerful);
+	- added support for NT4 version of Mirage driver.
+
+2006-06-14 21:32  const_k
+
+	* winvnc/: IncomingConnectionsControls.cpp, vncClient.cpp,
+	vncMenu.h, vncProperties.cpp, vncProperties.h, vncServer.cpp,
+	vncServer.h: More accurate password handling - now the server code
+	tries to distinguish between "empty" and "unset" passwords better.
+
+2006-04-23 18:42  const_k
+
+	* rfb/rfbproto.h, vncviewer/ClientConnection.cpp,
+	vncviewer/ClientConnection.h, vncviewer/ClientConnectionFile.cpp,
+	winvnc/vncClient.cpp, winvnc/vncProperties.cpp,
+	winvnc/vncProperties.h, winvnc/vncServer.cpp, winvnc/vncServer.h:
+	Removed the code for "UnixLogin" and "External" authentication.
+	These two were never officially supported in the mainstream version
+	anyway.
+
+2006-04-23 13:46  const_k
+
+	* winvnc/: IncomingConnectionsControls.cpp, WinVNC.rc,
+	vncProperties.cpp, vncProperties.h: Now we remember and restore
+	previously selected tab of the Properties dialog.  Also, keyboard
+	focus handling in the same dialog is slightly improved.
+
+2006-04-23 11:57  const_k
+
+	* winvnc/WinVNC.rc: Improved layout of the "Sharing" tab of the
+	Properties dialog. Added a context help message for the "Share
+	primary display" option.
+
+2006-04-23 10:31  const_k
+
+	* winvnc/resource.h: Made control IDs unique, to resolve problems
+	with context help.
+
+2006-04-22 21:45  const_k
+
+	* winvnc/: MatchWindow.cpp, PollControls.cpp,
+	SharedDesktopArea.cpp, SharedDesktopArea.h, VSocket.cpp,
+	VideoDriver.cpp, VideoDriver.h, WinVNC.dsp, WinVNC.rc, resource.h,
+	vncBuffer.cpp, vncBuffer.h, vncClient.cpp, vncClient.h,
+	vncDesktop.cpp, vncDesktop.h, vncEncodeZlibHex.cpp, vncEncoder.cpp,
+	vncKeymap.cpp, vncMenu.cpp, vncProperties.cpp, vncProperties.h,
+	vncRegion.cpp, vncRegion.h, vncServer.cpp, vncServer.h,
+	vncService.cpp: Applied a set of changes by Lev Kazarkin (DemoForge
+	LLC): - added support for DfMirage driver direct screen access
+	mode; - added support for multiple monitors; - added workaround for
+	Windows bug with "wrong order of monitors"; - extended GUI for
+	screen sharing area; - fixed some minor bugs.
+
+2006-04-20 12:04  const_k
+
+	* BUILDING.txt: Typos fixed.
+
+2006-04-10 21:09  const_k
+
+	* vncviewer/ClientConnection.cpp: Fixed a problem with not setting
+	proper window size/position revealed while testing under Win95.
+
+2006-04-10 20:19  const_k
+
+	* vncviewer/ClientConnectionFullScreen.cpp: Better values for
+	scrolling parameters in the full-screen mode.
+
+2006-04-10 19:35  const_k
+
+	* vncviewer/VNCOptions.cpp: Fixed a problem with not enabling JPEG
+	compression by default.
+
+2006-04-05 10:18  const_k
+
+	* winvnc/: WinVNC.h, vncDesktop.cpp, vncMenu.cpp, vncServer.cpp,
+	vncServer.h: Finally, the problem #1104846 with wallpaper removal
+	has been solved, hopefully without side effects this time.
+
+2005-08-06 14:36  const_k
+
+	* winvnc/: vncDesktop.cpp, WallpaperUtils.cpp, WallpaperUtils.h,
+	vncMenu.cpp, vncMenu.h: Fixed major problem with disconnecting on
+	screen locking, user logoff/logon, in the service mode. Also, this
+	fixes the problem with restoring wallpaper.  The bugs fixed are
+	those reported in #1250353, #1243405, #1242752, #1242689, #1233397
+	and maybe others. From the other side, the fix reverts the behavior
+	described in #1104846.
+
 2005-07-06 01:04  const_k
 
 	* InstInfo.rtf: Changed year in the copyright statement.

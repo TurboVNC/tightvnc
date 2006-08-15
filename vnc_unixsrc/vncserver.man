@@ -5,13 +5,13 @@
 .\" Copyright (C) 1998 Marcus.Brinkmann@ruhr-uni-bochum.de
 .\" Copyright (C) 2000, opal@debian.org
 .\" Copyright (C) 2000, 2001 Red Hat, Inc.
-.\" Copyright (C) 2001, 2002 Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+.\" Copyright (C) 2001, 2002 Constantin Kaplinsky
 .\"
 .\" You may distribute under the terms of the GNU General Public
 .\" License as specified in the file LICENCE.TXT that comes with the
 .\" TightVNC distribution.
 .\"
-.TH vncserver 1 "August 2002" "" "TightVNC"
+.TH vncserver 1 "August 2006" "" "TightVNC"
 .SH NAME
 vncserver \- a wrapper to launch an X server for VNC.
 .SH SYNOPSIS
@@ -78,7 +78,7 @@ Shuts down \fBXvnc\fR server on display :1.
 \fBXvnc\fR(1), \fBvncviewer\fR(1), \fBvncpasswd\fR(1), \fBvncconnect\fR(1)
 .SH AUTHORS
 Original VNC was developed in AT&T Laboratories Cambridge. TightVNC
-additions was implemented by Constantin Kaplinsky. Many other people
+additions were implemented by Constantin Kaplinsky. Many other people
 participated in development, testing and support.
 
 \fBMan page authors:\fR
@@ -87,4 +87,4 @@ Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,
 .br
 Tim Waugh <twaugh@redhat.com>,
 .br
-Constantin Kaplinsky <const@ce.cctpu.edu.ru>
+Constantin Kaplinsky <const@tightvnc.com>

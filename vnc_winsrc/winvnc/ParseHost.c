@@ -1,8 +1,6 @@
-//  Copyright (C) 1999 AT&T Laboratories Cambridge. All Rights Reserved.
+//  Copyright (C) 2006 Constantin Kaplinsky. All Rights Reserved.
 //
-//  This file is part of the VNC system.
-//
-//  The VNC system is free software; you can redistribute it and/or modify
+//  TightVNC is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
 //  (at your option) any later version.
@@ -18,26 +16,36 @@
 //  USA.
 //
 // TightVNC distribution homepage on the Web: http://www.tightvnc.com/
+
+#include <stdlib.h>
+#include <string.h>
+#include "ParseHost.h"
+
 //
-// If the source code for the VNC system is not available from the place 
-// whence you received this file, check http://www.uk.research.att.com/vnc or contact
-// the authors on vnc@uk.research.att.com for information on obtaining it.
+// Parse a VNC host name string, return port number.
+// See the details in ParseHost.h.
+//
 
-
-#ifndef AUTHDIALOG_H__
-#define AUTHDIALOG_H__
-
-#pragma once
-
-class AuthDialog  
+int ParseHostPort(char *str, int base_port)
 {
-public:
-	AuthDialog();
-	virtual ~AuthDialog();
-	int DoDialog();
-	TCHAR m_passwd[256];
-	static BOOL CALLBACK DlgProc(  HWND hwndDlg,  UINT uMsg, 
-		WPARAM wParam, LPARAM lParam );
-};
+	int port, disp;
+	char *port_ptr;
 
-#endif // AUTHDIALOG_H__
+	port = base_port;
+	port_ptr = strchr(str, ':');
+	if (port_ptr) {
+		*port_ptr++ = '\0';
+		if (*port_ptr == ':') {
+			port = atoi(++port_ptr);	// port number after "::"
+		} else {
+			disp = atoi(port_ptr);
+			if (disp < 100) {
+				port += disp;			// display number after ":"
+			} else {
+				port = disp;			// port number after ":"
+			}
+		}
+	}
+
+	return port;
+}

@@ -107,7 +107,8 @@ private:
 	void SetupTunneling();
 	void PerformAuthenticationTight();
 	void Authenticate(CARD32 authScheme);
-	bool AuthenticateVNC(char *errBuf, int errBufSize, bool *again);
+	bool AuthenticateNone(char *errBuf, int errBufSize);
+	bool AuthenticateVNC(char *errBuf, int errBufSize);
 	void ReadServerInit();
 	void ReadInteractionCaps();
 	void ReadCapabilityList(CapsContainer *caps, int count);
@@ -331,7 +332,7 @@ private:
 	rfbServerInitMsg m_si;
 	rfbPixelFormat m_myFormat, m_pendingFormat;
 	// protocol version in use.
-	int m_majorVersion, m_minorVersion;
+	int m_minorVersion;
 	bool m_tightVncProtocol;
 	bool m_threadStarted, m_running;
 	// mid-connection format change requested

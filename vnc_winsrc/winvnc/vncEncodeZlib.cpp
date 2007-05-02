@@ -86,8 +86,8 @@ vncEncodeZlib::NumCodedRects(RECT &rect)
 	return 1;
 ******************************************************************/
 
-	const rectW = rect.right - rect.left;
-	const rectH = rect.bottom - rect.top;
+	const int rectW = rect.right - rect.left;
+	const int rectH = rect.bottom - rect.top;
 
 	// Return the number of rectangles needed to encode the given
 	// update.  ( ZLIB_MAX_SIZE(rectW) / rectW ) is the number of lines in 
@@ -114,8 +114,8 @@ vncEncodeZlib::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT
 	offsety = offy;
 	RECT partialRect;
 
-	const rectW = rect.right - rect.left;
-	const rectH = rect.bottom - rect.top;
+	const int rectW = rect.right - rect.left;
+	const int rectH = rect.bottom - rect.top;
 
 	partialRect.right = rect.right;
 	partialRect.left = rect.left;
@@ -172,10 +172,10 @@ vncEncodeZlib::EncodeOneRect(BYTE *source, BYTE *dest, const RECT &rect)
 	int previousTotalOut;
 	int deflateResult;
 
-	const rectW = rect.right - rect.left;
-	const rectH = rect.bottom - rect.top;
-	const rawDataSize = (rectW*rectH*m_remoteformat.bitsPerPixel / 8);
-	const maxCompSize = (rawDataSize + (rawDataSize/100) + 8);
+	const int rectW = rect.right - rect.left;
+	const int rectH = rect.bottom - rect.top;
+	const int rawDataSize = (rectW*rectH*m_remoteformat.bitsPerPixel / 8);
+	const int maxCompSize = (rawDataSize + (rawDataSize/100) + 8);
 
 	// Send as raw if the update is too small to compress.
 	if (rawDataSize < VNC_ENCODE_ZLIB_MIN_COMP_SIZE)

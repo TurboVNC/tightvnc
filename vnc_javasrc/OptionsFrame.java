@@ -47,7 +47,7 @@ class OptionsFrame extends Frame
   };
 
   static String[][] values = {
-    { "Auto", "Raw", "RRE", "CoRRE", "Hextile", "Zlib", "Tight" },
+    { "Auto", "Raw", "RRE", "CoRRE", "Hextile", "Zlib", "Tight", "ZRLE" },
     { "Default", "1", "2", "3", "4", "5", "6", "7", "8", "9" },
     { "JPEG off", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" },
     { "Enable", "Ignore", "Disable" },
@@ -94,6 +94,9 @@ class OptionsFrame extends Frame
   boolean shareDesktop;
   boolean viewOnly;
   int scaleCursor;
+
+  boolean autoScale;
+  int scalingFactor;
 
   //
   // Constructor.  Set up the labels and choices from the names and values
@@ -164,6 +167,35 @@ class OptionsFrame extends Frame
       }
     }
 
+    // FIXME: Provide some sort of GUI for "Scaling Factor".
+
+    autoScale = false;
+    scalingFactor = 100;
+    String s = viewer.readParameter("Scaling Factor", false);
+    if (s != null) {
+      if (s.equalsIgnoreCase("Auto")) {
+	autoScale = true;
+      } else {
+	// Remove the '%' char at the end of string if present.
+	if (s.charAt(s.length() - 1) == '%') {
+	  s = s.substring(0, s.length() - 1);
+	}
+	// Convert to an integer.
+	try {
+	  scalingFactor = Integer.parseInt(s);
+	}
+	catch (NumberFormatException e) {
+	  scalingFactor = 100;
+	}
+	// Make sure scalingFactor is in the range of [1..1000].
+	if (scalingFactor < 1) {
+	  scalingFactor = 1;
+	} else if (scalingFactor > 1000) {
+	  scalingFactor = 1000;
+	}
+      }
+    }
+
     // Make the booleans and encodings array correspond to the state of the GUI
 
     setEncodings();
@@ -203,6 +235,8 @@ class OptionsFrame extends Frame
       preferredEncoding = RfbProto.EncodingCoRRE;
     } else if (choices[encodingIndex].getSelectedItem().equals("Hextile")) {
       preferredEncoding = RfbProto.EncodingHextile;
+    } else if (choices[encodingIndex].getSelectedItem().equals("ZRLE")) {
+      preferredEncoding = RfbProto.EncodingZRLE;
     } else if (choices[encodingIndex].getSelectedItem().equals("Zlib")) {
       preferredEncoding = RfbProto.EncodingZlib;
       enableCompressLevel = true;

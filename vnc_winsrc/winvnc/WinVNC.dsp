@@ -57,6 +57,11 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBC"
 # SUBTRACT LINK32 /pdb:none
+# Begin Special Build Tool
+SOURCE="$(InputPath)"
+PreLink_Desc=Updating BuildTime
+PreLink_Cmds=cl /c /nologo /Fo.\Release\ /Fd.\Release /MT BuildTime.cpp
+# End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "WinVNC - Win32 Debug"
 
@@ -84,6 +89,11 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /map /debug /machine:I386 /nodefaultlib:"LIBCD" /pdbtype:sept
 # SUBTRACT LINK32 /incremental:no
+# Begin Special Build Tool
+SOURCE="$(InputPath)"
+PreLink_Desc=Updating BuildTime
+PreLink_Cmds=cl /c /nologo /Fo.\Debug\ /Fd.\Debug /MT BuildTime.cpp
+# End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "WinVNC - Win32 Profile"
 
@@ -111,6 +121,11 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 wsock32.lib omniORB2_rtd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"o:\release\lib\x86_nt_3.5"
 # ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /profile /map /debug /machine:I386
+# Begin Special Build Tool
+SOURCE="$(InputPath)"
+PreLink_Desc=Updating BuildTime
+PreLink_Cmds=cl /c /nologo /Fo.\Profile\ /Fd.\Profile /MT BuildTime.cpp
+# End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "WinVNC - Win32 HorizonLive"
 
@@ -142,6 +157,11 @@ LINK32=link.exe
 # SUBTRACT BASE LINK32 /pdb:none /nodefaultlib
 # ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comctl32.lib htmlhelp.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBC" /out:"HorizonLive/AppShare.exe"
 # SUBTRACT LINK32 /pdb:none /nodefaultlib
+# Begin Special Build Tool
+SOURCE="$(InputPath)"
+PreLink_Desc=Updating BuildTime
+PreLink_Cmds=cl /c /nologo /Fo.\HorizonLive\ /Fd.\HorizonLive /MT BuildTime.cpp
+# End Special Build Tool
 
 !ENDIF 
 
@@ -160,7 +180,15 @@ SOURCE=.\AdministrationControls.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\BuildTime.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\d3des.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\DynamicFn.cpp
 # End Source File
 # Begin Source File
 
@@ -185,6 +213,10 @@ SOURCE=.\MatchWindow.cpp
 # Begin Source File
 
 SOURCE=.\MinMax.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ParseHost.c
 # End Source File
 # Begin Source File
 
@@ -281,6 +313,10 @@ SOURCE=.\tabletranstemplate.cpp
 # Begin Source File
 
 SOURCE=.\translate.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TsSessions.cpp
 # End Source File
 # Begin Source File
 
@@ -424,6 +460,10 @@ SOURCE=.\d3des.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DynamicFn.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\FileTransferItemInfo.h
 # End Source File
 # Begin Source File
@@ -449,6 +489,10 @@ SOURCE=.\MatchWindow.h
 # Begin Source File
 
 SOURCE=.\MinMax.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ParseHost.h
 # End Source File
 # Begin Source File
 
@@ -485,6 +529,10 @@ SOURCE=.\stdhdrs.h
 # Begin Source File
 
 SOURCE=.\translate.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TsSessions.h
 # End Source File
 # Begin Source File
 
@@ -680,10 +728,6 @@ SOURCE=.\res\AuthPanel.class
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\AuthUnixLoginPanel.class
-# End Source File
-# Begin Source File
-
 SOURCE=.\res\ButtonPanel.class
 # End Source File
 # Begin Source File
@@ -701,6 +745,14 @@ SOURCE=.\res\ClipboardFrame.class
 # Begin Source File
 
 SOURCE=.\res\DesCipher.class
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\InStream.class
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\MemInStream.class
 # End Source File
 # Begin Source File
 
@@ -732,11 +784,19 @@ SOURCE=.\res\VncCanvas.class
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\VncCanvas2.class
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\VncViewer.class
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\VncViewer.jar
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\ZlibInStream.class
 # End Source File
 # End Group
 # Begin Source File

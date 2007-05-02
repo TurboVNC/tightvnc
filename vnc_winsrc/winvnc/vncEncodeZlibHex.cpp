@@ -114,8 +114,8 @@ vncEncodeZlibHex::NumCodedRects(RECT &rect)
 UINT
 vncEncodeZlibHex::EncodeRect(BYTE *source, VSocket *outConn, BYTE *dest, const RECT &rect, int offx, int offy)
 {
-	const rectW = rect.right - rect.left;
-	const rectH = rect.bottom - rect.top;
+	const int rectW = rect.right - rect.left;
+	const int rectH = rect.bottom - rect.top;
 
 	// Create the rectangle header
 	rfbFramebufferUpdateRectHeader *surh=(rfbFramebufferUpdateRectHeader *)dest;

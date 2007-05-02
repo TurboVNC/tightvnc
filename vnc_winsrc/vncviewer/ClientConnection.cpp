@@ -1,4 +1,4 @@
-//  Copyright (C) 2003 Constantin Kaplinsky. All Rights Reserved.
+//  Copyright (C) 2003-2006 Constantin Kaplinsky. All Rights Reserved.
 //  Copyright (C) 2000 Tridia Corporation. All Rights Reserved.
 //  Copyright (C) 1999 AT&T Laboratories Cambridge. All Rights Reserved.
 //
@@ -46,7 +46,6 @@
 
 #include "ClientConnection.h"
 #include "SessionDialog.h"
-#include "AuthDialog.h"
 #include "LoginAuthDialog.h"
 #include "AboutBox.h"
 #include "FileTransfer.h"
@@ -802,15 +801,7 @@ void ClientConnection::NegotiateProtocolVersion()
 {
 	rfbProtocolVersionMsg pv;
 
-   /* if the connection is immediately closed, don't report anything, so
-       that pmw's monitor can make test connections */
-
-    try {
-		ReadExact(pv, sz_rfbProtocolVersionMsg);
-	} catch (Exception &e) {
-		vnclog.Print(0, _T("Error reading protocol version: %s\n"), e.m_info);
-		throw QuietException(e.m_info);
-	}
+	ReadExact(pv, sz_rfbProtocolVersionMsg);
 
     pv[sz_rfbProtocolVersionMsg] = 0;
 
@@ -821,38 +812,26 @@ void ClientConnection::NegotiateProtocolVersion()
 	// version number it gives us without parsing it.  
 	// Too much hassle replacing sscanf for now. Fix this!
 #ifdef UNDER_CE
-	m_majorVersion = rfbProtocolMajorVersion;
-	m_minorVersion = rfbProtocolMinorVersion;
+	m_minorVersion = 8;
 #else
-    if (sscanf(pv,rfbProtocolVersionFormat,&m_majorVersion,&m_minorVersion) != 2) {
+	int majorVersion, minorVersion;
+	if (sscanf(pv, rfbProtocolVersionFormat, &majorVersion, &minorVersion) != 2) {
 		throw WarningException(_T("Invalid protocol"));
-    }
-    vnclog.Print(0, _T("RFB server supports protocol version %d.%d\n"),
-	    m_majorVersion,m_minorVersion);
+	}
+	vnclog.Print(0, _T("RFB server supports protocol version 3.%d\n"),
+				 minorVersion);
 
-    if ((m_majorVersion == 3) && (m_minorVersion < 3)) {
-		
-        /* if server is 3.2 we can't use the new authentication */
-		vnclog.Print(0, _T("Can't use IDEA authentication\n"));
-        /* This will be reported later if authentication is requested*/
-
-	} else if ((m_majorVersion == 3) && (m_minorVersion >= rfbProtocolMinorVersion)) {
-
-		/* the server supports at least the standard protocol 3.7 */
-		m_majorVersion = rfbProtocolMajorVersion;
-		m_minorVersion = rfbProtocolMinorVersion;
-
-    } else {
-
-        /* any other server version, request the standard 3.3 */
-		m_majorVersion = rfbProtocolMajorVersion;
-		m_minorVersion = rfbProtocolFallbackMinorVersion;
-
-    }
+	if (majorVersion == 3 && minorVersion >= 8) {
+		m_minorVersion = 8;
+	} else if (majorVersion == 3 && minorVersion == 7) {
+		m_minorVersion = 7;
+	} else {
+		m_minorVersion = 3;
+	}
 
 	m_tightVncProtocol = false;
 
-    sprintf(pv,rfbProtocolVersionFormat,m_majorVersion,m_minorVersion);
+    sprintf(pv, rfbProtocolVersionFormat, 3, m_minorVersion);
 #endif
 
     WriteExact(pv, sz_rfbProtocolVersionMsg);
@@ -860,8 +839,8 @@ void ClientConnection::NegotiateProtocolVersion()
 	if (m_connDlg != NULL)
 		m_connDlg->SetStatus("Protocol version negotiated");
 
-	vnclog.Print(0, _T("Connected to RFB server, using protocol version %d.%d\n"),
-		m_majorVersion, m_minorVersion);
+	vnclog.Print(0, _T("Connected to RFB server, using protocol version 3.%d\n"),
+				 m_minorVersion);
 }
 
 //
@@ -871,7 +850,7 @@ void ClientConnection::NegotiateProtocolVersion()
 void ClientConnection::PerformAuthentication()
 {
 	int secType;
-	if (m_minorVersion == rfbProtocolMinorVersion) {
+	if (m_minorVersion >= 7) {
 		secType = SelectSecurityType();
 	} else {
 		secType = ReadSecurityType();
@@ -879,8 +858,8 @@ void ClientConnection::PerformAuthentication()
 
 	switch (secType) {
     case rfbSecTypeNone:
-		vnclog.Print(0, _T("No authentication needed\n"));
-		m_authScheme = rfbSecTypeNone;
+		Authenticate(rfbAuthNone);
+		m_authScheme = rfbAuthNone;
 		break;
     case rfbSecTypeVncAuth:
 		Authenticate(rfbAuthVNC);
@@ -899,7 +878,7 @@ void ClientConnection::PerformAuthentication()
 }
 
 //
-// Read security type from the server (protocol version 3.3)
+// Read security type from the server (protocol 3.3)
 //
 
 int ClientConnection::ReadSecurityType()
@@ -925,7 +904,7 @@ int ClientConnection::ReadSecurityType()
 }
 
 //
-// Select security type from the server's list (protocol version 3.7)
+// Select security type from the server's list (protocol 3.7 and above)
 //
 
 int ClientConnection::SelectSecurityType()
@@ -984,7 +963,7 @@ int ClientConnection::SelectSecurityType()
 }
 
 //
-// Setup tunneling (protocol version 3.7t)
+// Setup tunneling (protocol 3.7t, 3.8t)
 //
 
 void ClientConnection::SetupTunneling()
@@ -1007,7 +986,7 @@ void ClientConnection::SetupTunneling()
 }
 
 //
-// Negotiate authentication scheme (protocol version 3.7t)
+// Negotiate authentication scheme (protocol 3.7t, 3.8t)
 //
 
 void ClientConnection::PerformAuthenticationTight()
@@ -1021,7 +1000,10 @@ void ClientConnection::PerformAuthenticationTight()
 
 	if (!caps.nAuthTypes) {
 		vnclog.Print(0, _T("No authentication needed\n"));
-		m_authScheme = rfbSecTypeNone;
+		if (m_connDlg != NULL)
+			m_connDlg->SetStatus("No authentication needed");
+		Authenticate(rfbAuthNone);
+		m_authScheme = rfbAuthNone;
 	} else {
 		ReadCapabilityList(&m_authCaps, caps.nAuthTypes);
 		if (m_connDlg != NULL)
@@ -1044,8 +1026,9 @@ void ClientConnection::PerformAuthenticationTight()
 }
 
 // The definition of a function implementing some authentication scheme.
+// For an example, see ClientConnection::AuthenticateVNC, below.
 
-typedef bool (ClientConnection::*AuthFunc)(char *, int, bool *);
+typedef bool (ClientConnection::*AuthFunc)(char *, int);
 
 // A wrapper function for different authentication schemes.
 
@@ -1063,6 +1046,9 @@ void ClientConnection::Authenticate(CARD32 authScheme)
 	***/
 
 	switch(authScheme) {
+	case rfbAuthNone:
+		authFuncPtr = &ClientConnection::AuthenticateNone;
+		break;
 	case rfbAuthVNC:
 		authFuncPtr = &ClientConnection::AuthenticateVNC;
 		break;
@@ -1078,26 +1064,74 @@ void ClientConnection::Authenticate(CARD32 authScheme)
 	const int errorMsgSize = 256;
 	CheckBufferSize(errorMsgSize);
 	char *errorMsg = m_netbuf;
-	bool tryAgain;
-	if (!(this->*authFuncPtr)(errorMsg, errorMsgSize, &tryAgain)) {
+	bool wasError = !(this->*authFuncPtr)(errorMsg, errorMsgSize);
+
+	// Report authentication error.
+	if (wasError) {
 		vnclog.Print(0, _T("%s\n"), errorMsg);
 		if (m_connDlg != NULL)
-			m_connDlg->SetStatus("Authentication failed");
-		if (tryAgain) {
-			throw AuthException(errorMsg);
-		} else {
-			throw ErrorException(errorMsg);
-		}
-	} else {
-		if (m_connDlg != NULL)
-			m_connDlg->SetStatus("Authentication succeeded");
-		vnclog.Print(0, _T("Authentication succeeded\n"));
+			m_connDlg->SetStatus("Error during authentication");
+		throw AuthException(errorMsg);
 	}
+
+	CARD32 authResult;
+	if (authScheme == rfbAuthNone && m_minorVersion < 8) {
+		// In protocol versions prior to 3.8, "no authentication" is a
+		// special case - no "security result" is sent by the server.
+		authResult = rfbAuthOK;
+	} else {
+		ReadExact((char *) &authResult, 4);
+		authResult = Swap32IfLE(authResult);
+	}
+
+	switch (authResult) {
+	case rfbAuthOK:
+		if (m_connDlg != NULL)
+			m_connDlg->SetStatus("Authentication successful");
+		vnclog.Print(0, _T("Authentication successful\n"));
+		return;
+	case rfbAuthFailed:
+		if (m_minorVersion >= 8) {
+			errorMsg = ReadFailureReason();
+		} else {
+			errorMsg = "Authentication failure";
+		}
+		break;
+	case rfbAuthTooMany:
+		errorMsg = "Authentication failure, too many tries";
+		break;
+	default:
+		_snprintf(m_netbuf, 256, "Unknown authentication result (%d)",
+				 (int)authResult);
+		errorMsg = m_netbuf;
+		break;
+	}
+
+	// Report authentication failure.
+	vnclog.Print(0, _T("%s\n"), errorMsg);
+	if (m_connDlg != NULL)
+		m_connDlg->SetStatus(errorMsg);
+	throw AuthException(errorMsg);
+}
+
+// "Null" authentication.
+
+bool ClientConnection::AuthenticateNone(char *errBuf, int errBufSize)
+{
+	return true;
 }
 
 // The standard VNC authentication.
+//
+// An authentication function should return false on error and true if
+// the authentication process was successful. Note that returning true
+// does not mean that authentication was passed by the server, the
+// server's result will be received and analyzed later.
+// If false is returned, then a text error message should be copied
+// to errorBuf[], no more than errBufSize bytes should be copied into
+// that buffer.
 
-bool ClientConnection::AuthenticateVNC(char *errBuf, int errBufSize, bool *again)
+bool ClientConnection::AuthenticateVNC(char *errBuf, int errBufSize)
 {
     CARD8 challenge[CHALLENGESIZE];
 	ReadExact((char *)challenge, CHALLENGESIZE);
@@ -1109,8 +1143,8 @@ bool ClientConnection::AuthenticateVNC(char *errBuf, int errBufSize, bool *again
 		strcpy(passwd, pw);
 		free(pw);
 	} else {
-		AuthDialog ad;
-		ad.DoDialog();	
+		LoginAuthDialog ad(m_opts.m_display, "Standard VNC Authentication");
+		ad.DoDialog();
 #ifndef UNDER_CE
 		strncpy(passwd, ad.m_passwd, MAXPWLEN);
 		passwd[MAXPWLEN]= '\0';
@@ -1130,7 +1164,6 @@ bool ClientConnection::AuthenticateVNC(char *errBuf, int errBufSize, bool *again
 #endif
 		if (strlen(passwd) == 0) {
 			_snprintf(errBuf, errBufSize, "Empty password");
-			*again = true;
 			return false;
 		}
 		if (strlen(passwd) > 8) {
@@ -1146,28 +1179,7 @@ bool ClientConnection::AuthenticateVNC(char *errBuf, int errBufSize, bool *again
 
 	WriteExact((char *) challenge, CHALLENGESIZE);
 
-	CARD32 authResult;
-	ReadExact((char *) &authResult, 4);
-	authResult = Swap32IfLE(authResult);
-
-	switch (authResult) {
-	case rfbVncAuthOK:
-		return true;
-	case rfbVncAuthFailed:
-		_snprintf(errBuf, errBufSize, "VNC authentication failed");
-		*again = true;
-		break;
-	case rfbVncAuthTooMany:
-		_snprintf(errBuf, errBufSize, "VNC authentication failed - too many tries");
-		*again = false;
-		break;
-	default:
-		_snprintf(errBuf, errBufSize, "Unknown VNC authentication result: %u",
-				  (unsigned int)authResult);
-		*again = false;
-		break;
-	}
-	return false;
+	return true;
 }
 
 void ClientConnection::SendClientInit()
@@ -1221,7 +1233,7 @@ void ClientConnection::ReadServerInit()
 }
 
 //
-// In the protocol version 3.7t, the server informs us about supported
+// In protocols 3.7t/3.8t, the server informs us about supported
 // protocol messages and encodings. Here we read this information.
 //
 
@@ -2682,12 +2694,12 @@ void ClientConnection::ShowConnInfo()
 		_T("Host: %s port: %d\n\r\n\r")
 		_T("Desktop geometry: %d x %d x %d\n\r")
 		_T("Using depth: %d\n\r")
-		_T("Current protocol version: %d.%d%s\n\r\n\r")
+		_T("Current protocol version: 3.%d%s\n\r\n\r")
 		_T("Current keyboard name: %s\n\r"),
 		m_desktopName, m_host, m_port,
 		m_si.framebufferWidth, m_si.framebufferHeight, m_si.format.depth,
 		m_myFormat.depth,
-		m_majorVersion, m_minorVersion, (m_tightVncProtocol ? "tight" : ""),
+		m_minorVersion, (m_tightVncProtocol ? "tight" : ""),
 		kbdname);
 	MessageBox(NULL, buf, _T("VNC connection info"), MB_ICONINFORMATION | MB_OK);
 }

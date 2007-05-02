@@ -3,8 +3,8 @@
 
 [Setup]
 AppName=TightVNC
-AppVerName=TightVNC 1.3.8
-AppVersion=1.3.8
+AppVerName=TightVNC 1.3.9
+AppVersion=1.3.9
 AppPublisher=TightVNC Group
 AppPublisherURL=http://www.tightvnc.com/
 AppSupportURL=http://www.tightvnc.com/support.html
@@ -27,9 +27,12 @@ Name: "viewer"; Description: "TightVNC Viewer"; Types: full compact custom;
 Name: "webdoc"; Description: "Web pages and documentation"; Types: full custom;
 
 [Files]
-Source: "WinVNC.exe"; DestDir: "{app}"; Flags: ignoreversion restartreplace; Components: server
-Source: "VNCHooks.dll"; DestDir: "{app}"; Flags: ignoreversion restartreplace; Components: server
-Source: "vncviewer.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: viewer
+Source: "WinVNC.exe"; DestDir: "{app}"; Flags: ignoreversion restartreplace; Components: server; MinVersion: 4.1,4.0
+Source: "VNCHooks.dll"; DestDir: "{app}"; Flags: ignoreversion restartreplace; Components: server; MinVersion: 4.1,4.0
+Source: "vncviewer.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: viewer; MinVersion: 4.1,4.0
+Source: "WinVNC_Win95.exe"; DestDir: "{app}"; DestName: WinVNC.exe; Flags: ignoreversion restartreplace; Components: server; OnlyBelowVersion: 4.1,4.0
+Source: "VNCHooks_Win95.dll"; DestDir: "{app}"; DestName: VNCHooks.dll; Flags: ignoreversion restartreplace; Components: server; OnlyBelowVersion: 4.1,4.0
+Source: "vncviewer_Win95.exe"; DestDir: "{app}"; DestName: vncviewer.exe; Flags: ignoreversion; Components: viewer; OnlyBelowVersion: 4.1,4.0
 Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LICENCE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "TightVNC.url"; DestDir: "{app}"; Flags: ignoreversion
@@ -56,7 +59,7 @@ Name: "{group}\Documentation\Licensing Terms";        FileName: "{app}\LICENCE.t
 Name: "{group}\Documentation\Make a Donation";        FileName: "{app}\TightVNC-donate.url"
 Name: "{group}\Documentation\TightVNC Web Site";      FileName: "{app}\TightVNC.url"
 Name: "{group}\Documentation\What's New (Detailed Log)"; FileName: "{app}\Web\changelog-win32.html";                   WorkingDir: "{app}\Web"; Components: webdoc
-Name: "{group}\Documentation\What's New (Summary)";   FileName: "{app}\Web\whatsnew-devel.html";                       WorkingDir: "{app}\Web"; Components: webdoc
+Name: "{group}\Documentation\What's New (Summary)";   FileName: "{app}\Web\whatsnew.html";                             WorkingDir: "{app}\Web"; Components: webdoc
 
 [Tasks]
 Name: associate; Description: "&Associate .vnc files with TightVNC Viewer"; GroupDescription: "File associations:"; Components: viewer

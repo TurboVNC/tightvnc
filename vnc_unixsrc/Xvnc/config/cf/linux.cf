@@ -254,6 +254,13 @@ XCOMM binutils:	(LinuxBinUtilsMajorVersion)
 #define ServerExtraDefines	-DGCCUSESGAS XFree86ServerDefines
 #endif /* i386Architecture */
 
+#ifdef x86_64Architecture
+#define OptimizedCDebugFlags	-O2
+#define LinuxMachineDefines	-D__x86_64__
+#define ServerOSDefines		XFree86ServerOSDefines -DDDXTIME -DPART_NET
+#define ServerExtraDefines	-DGCCUSESGAS XFree86ServerDefines -D_XSERVER64
+#endif /* x86_64Architecture */
+
 #ifdef AlphaArchitecture
 #define OptimizedCDebugFlags	-O2
 #define LinuxMachineDefines	-D__alpha__

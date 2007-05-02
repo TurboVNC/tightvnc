@@ -1,5 +1,5 @@
 
-  TightVNC version 1.3.8
+  TightVNC version 1.3.9
   BUILDING vncviewer and WinVNC
 
 ======================================================================
@@ -7,9 +7,14 @@
   Building from the source distribution
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The source distribution is ready to compile, but the only compiler
-supported is MS Visual C++ 6.0. Workspace files (*.dsw) for this
-environment are included in the distribution.
+The source distribution is ready to compile (all required libraries
+are included).
+
+Currently, two build environments are supported: MS Visual C++ 6.0 and
+MS Visual C++ 2005. The Workspace files for both these environments
+are included in the distribution. Use WinVNC.dsw and vncviewer.dsw
+workspace files for Visual C++ 6.0; WinVNC.sln and vncviewer.sln
+solution files for Visual C++ 2005.
 
 Building with Borland C++ 5.5 compiler is not supported any more,
 sorry.
@@ -54,4 +59,4 @@ HtmlHelp.h and HtmlHelp.lib. Copy both files to the following folders:
     vnc_winsrc/winvnc/
 
 After zlib, JPEG and HtmlHelp files are in place, the source is ready
-to compile with MS Visual C++ 6.0.
+to compile with either MS Visual C++ 6.0 or MS Visual C++ 2005.

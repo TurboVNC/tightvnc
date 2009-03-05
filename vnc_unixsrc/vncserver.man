@@ -74,6 +74,14 @@ and color depth of 16 bits per pixel.
 .TP
 \fBvncserver\fR \fI\-kill :1\fR
 Shuts down \fBXvnc\fR server on display :1.
+.SH FILES
+.TP
+/etc/tightvncserver.conf
+System-wide configuration file of TightVNC Server.
+.TP
+$HOME/.vnc/tightvncserver.conf
+User configuration file of TightVNC Server. Its setting override
+system-wide configuration.
 .SH SEE ALSO
 \fBXvnc\fR(1), \fBvncviewer\fR(1), \fBvncpasswd\fR(1), \fBvncconnect\fR(1)
 .SH AUTHORS

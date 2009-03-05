@@ -113,7 +113,6 @@ public:
 
 	TCHAR   m_host[256];
 	int     m_port;
-	TCHAR	m_via_host[256];
 
     // Logging
     int     m_logLevel;
@@ -131,6 +130,9 @@ public:
 #endif
 
 	int DoDialog(bool running = false);
+	BOOL RaiseDialog();
+	void CloseDialog();
+
 	void SetFromCommandLine(LPTSTR szCmdLine);
 
 
@@ -154,8 +156,8 @@ private:
 	
 	// Just for temporary use
 	bool m_running;
-	
-	
+
+	void setHistoryLimit(int newLimit);
 };
 
 #endif // VNCOPTIONS_H__

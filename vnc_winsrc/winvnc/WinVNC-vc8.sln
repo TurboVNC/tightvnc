@@ -1,0 +1,49 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VNCHooks", "VNCHooks\VNCHooks-vc8.vcproj", "{CC994DC2-CD0F-46B9-885E-08732A65665D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinVNC", "WinVNC-vc8.vcproj", "{EA6A09AC-04BB-423D-8842-CA48DF901058}"
+	ProjectSection(ProjectDependencies) = postProject
+		{224A4BAC-DEDE-43A4-81B9-14545F16E20E} = {224A4BAC-DEDE-43A4-81B9-14545F16E20E}
+		{2D948CAF-9622-495C-AB44-6337A6A9D440} = {2D948CAF-9622-495C-AB44-6337A6A9D440}
+		{CC994DC2-CD0F-46B9-885E-08732A65665D} = {CC994DC2-CD0F-46B9-885E-08732A65665D}
+		{A44055F1-6AAA-4F72-8939-C5C294CE6EEE} = {A44055F1-6AAA-4F72-8939-C5C294CE6EEE}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpeg", "libjpeg\libjpeg-vc8.vcproj", "{224A4BAC-DEDE-43A4-81B9-14545F16E20E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "omnithread", "omnithread\omnithread-vc8.vcproj", "{2D948CAF-9622-495C-AB44-6337A6A9D440}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib-vc8.vcproj", "{A44055F1-6AAA-4F72-8939-C5C294CE6EEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC994DC2-CD0F-46B9-885E-08732A65665D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CC994DC2-CD0F-46B9-885E-08732A65665D}.Debug|Win32.Build.0 = Debug|Win32
+		{CC994DC2-CD0F-46B9-885E-08732A65665D}.Release|Win32.ActiveCfg = Release|Win32
+		{CC994DC2-CD0F-46B9-885E-08732A65665D}.Release|Win32.Build.0 = Release|Win32
+		{EA6A09AC-04BB-423D-8842-CA48DF901058}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EA6A09AC-04BB-423D-8842-CA48DF901058}.Debug|Win32.Build.0 = Debug|Win32
+		{EA6A09AC-04BB-423D-8842-CA48DF901058}.Release|Win32.ActiveCfg = Release|Win32
+		{EA6A09AC-04BB-423D-8842-CA48DF901058}.Release|Win32.Build.0 = Release|Win32
+		{224A4BAC-DEDE-43A4-81B9-14545F16E20E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{224A4BAC-DEDE-43A4-81B9-14545F16E20E}.Debug|Win32.Build.0 = Debug|Win32
+		{224A4BAC-DEDE-43A4-81B9-14545F16E20E}.Release|Win32.ActiveCfg = Release|Win32
+		{224A4BAC-DEDE-43A4-81B9-14545F16E20E}.Release|Win32.Build.0 = Release|Win32
+		{2D948CAF-9622-495C-AB44-6337A6A9D440}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2D948CAF-9622-495C-AB44-6337A6A9D440}.Debug|Win32.Build.0 = Debug|Win32
+		{2D948CAF-9622-495C-AB44-6337A6A9D440}.Release|Win32.ActiveCfg = Release|Win32
+		{2D948CAF-9622-495C-AB44-6337A6A9D440}.Release|Win32.Build.0 = Release|Win32
+		{A44055F1-6AAA-4F72-8939-C5C294CE6EEE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A44055F1-6AAA-4F72-8939-C5C294CE6EEE}.Debug|Win32.Build.0 = Debug|Win32
+		{A44055F1-6AAA-4F72-8939-C5C294CE6EEE}.Release|Win32.ActiveCfg = Release|Win32
+		{A44055F1-6AAA-4F72-8939-C5C294CE6EEE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

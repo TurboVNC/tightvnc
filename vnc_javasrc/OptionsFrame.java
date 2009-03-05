@@ -213,7 +213,6 @@ class OptionsFrame extends Frame
     choices[shareDesktopIndex].setEnabled(false);
   }
 
-
   //
   // setEncodings looks at the encoding, compression level, JPEG
   // quality level, cursor shape updates and copyRect choices and sets
@@ -227,7 +226,6 @@ class OptionsFrame extends Frame
 
     preferredEncoding = RfbProto.EncodingRaw;
     boolean enableCompressLevel = false;
-    boolean enableQualityLevel = false;
 
     if (choices[encodingIndex].getSelectedItem().equals("RRE")) {
       preferredEncoding = RfbProto.EncodingRRE;
@@ -243,10 +241,8 @@ class OptionsFrame extends Frame
     } else if (choices[encodingIndex].getSelectedItem().equals("Tight")) {
       preferredEncoding = RfbProto.EncodingTight;
       enableCompressLevel = true;
-      enableQualityLevel = !eightBitColors;
     } else if (choices[encodingIndex].getSelectedItem().equals("Auto")) {
       preferredEncoding = -1;
-      enableQualityLevel = !eightBitColors;
     }
 
     // Handle compression level setting.
@@ -276,8 +272,6 @@ class OptionsFrame extends Frame
     if (jpegQuality < 0 || jpegQuality > 9) {
       jpegQuality = -1;
     }
-    labels[jpegQualityIndex].setEnabled(enableQualityLevel);
-    choices[jpegQualityIndex].setEnabled(enableQualityLevel);
 
     // Request cursor shape updates if necessary.
 
@@ -303,17 +297,16 @@ class OptionsFrame extends Frame
     eightBitColors =
       choices[eightBitColorsIndex].getSelectedItem().equals("Yes");
 
-    boolean enableJPEG = !eightBitColors &&
-      (choices[encodingIndex].getSelectedItem().equals("Tight") ||
-       choices[encodingIndex].getSelectedItem().equals("Auto"));
+    boolean enableJPEG = !eightBitColors;
 
     labels[jpegQualityIndex].setEnabled(enableJPEG);
     choices[jpegQualityIndex].setEnabled(enableJPEG);
   }
 
   //
-  // setOtherOptions looks at the "other" choices (ones which don't set the
-  // encoding or the color format) and sets the boolean flags appropriately.
+  // setOtherOptions looks at the "other" choices (ones that do not
+  // cause sending any protocol messages) and sets the boolean flags
+  // appropriately.
   //
 
   void setOtherOptions() {
@@ -382,6 +375,7 @@ class OptionsFrame extends Frame
 	       source == choices[scaleCursorIndex]) {
 
       setOtherOptions();
+
     }
   }
 

@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VNCHooks", "VNCHooks\VNCHooks.vcproj", "{CC994DC2-CD0F-46B9-885E-08732A65665D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinVNC", "WinVNC.vcproj", "{EA6A09AC-04BB-423D-8842-CA48DF901058}"

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9,00"
 	Name="libjpeg"
 	ProjectGUID="{224A4BAC-DEDE-43A4-81B9-14545F16E20E}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -15,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\Debug"
-			IntermediateDirectory=".\..\Debug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -47,10 +48,6 @@
 				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\..\Debug/libjpeg.pch"
-				AssemblerListingLocation=".\..\Debug/"
-				ObjectFile=".\..\Debug/"
-				ProgramDataBaseFileName=".\..\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -68,7 +65,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\..\Debug\libjpeg.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -89,8 +85,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\Release"
-			IntermediateDirectory=".\..\Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -121,10 +117,6 @@
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\..\Release/libjpeg.pch"
-				AssemblerListingLocation=".\..\Release/"
-				ObjectFile=".\..\Release/"
-				ProgramDataBaseFileName=".\..\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -141,7 +133,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\..\Release\libjpeg.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

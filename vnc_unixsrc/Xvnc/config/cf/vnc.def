@@ -108,7 +108,7 @@
 
 #define XVendorString		\"AT&T Laboratories Cambridge\"
 #define XVendorRelease		3332
-#define XvncRelease		\"TightVNC-1.3.9\"
+#define XvncRelease		\"TightVNC-1.3.10\"
 
 
 /*****************************************************************************/

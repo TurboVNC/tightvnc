@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#  Copyright (C) 2002-2003 Constantin Kaplinsky.  All Rights Reserved.
+#  Copyright (C) 2002-2009 Constantin Kaplinsky.  All Rights Reserved.
 #  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
 #
 #  This is free software; you can redistribute it and/or modify
@@ -23,15 +23,11 @@
 # vncserver - wrapper script to start an X VNC server.
 #
 
-#
 # First make sure we're operating in a sane environment.
-#
 
 &SanityCheck();
 
-#
-# Global variables.  You may want to configure some of these for your site.
-#
+# Default configuration of the TightVNC Server:
 
 $geometry = "1024x768";
 $depth = 24;
@@ -41,20 +37,14 @@ $vncUserDir = "$ENV{HOME}/.vnc";
 $fontPath = "unix/:7100";
 $authType = "-rfbauth $vncUserDir/passwd";
 
-# Here is another example of setting the font path:
-# $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
+# Read configuration from the system-wide and user files if present.
 
-# X colors database path is optional, uncomment and edit to use:
-# $colorPath = "/usr/lib/X11/rgb";
+$configFile = "/etc/tightvncserver.conf";
+ReadConfiguration();
+$configFile = "$ENV{HOME}/.vnc/tightvncserver.conf";
+ReadConfiguration();
 
-# You might wish to make your vnc directory under /tmp, to make sure
-# passwords are always kept on the local filesystem. To do that, just
-# uncomment the line below. Note that in this case Xvnc's .Xauthority
-# file will be searched in the same $vncUserDir directory by default,
-# and $ENV{HOME}/.vncstartup will be executed instead of usual
-# $vncUserDir/xstartup.
-#
-# $vncUserDir = "/tmp/$ENV{USER}-vnc";
+# Done reading configuration.
 
 $defaultXStartup
     = ("#!/bin/sh\n\n".
@@ -447,7 +437,7 @@ sub removeSlashes
 
 sub Usage
 {
-    die("TightVNC Server version 1.3.9\n".
+    die("TightVNC Server version 1.3.10\n".
 	"\n".
 	"Usage: $prog [<OPTIONS>] [:<DISPLAY#>]\n".
 	"       $prog -kill :<DISPLAY#>\n".
@@ -610,4 +600,32 @@ sub SanityCheck
 	$AF_INET = &AF_INET;
 	$SOCK_STREAM = &SOCK_STREAM;
     }
+}
+
+sub ReadConfiguration
+{
+  my @configurableVariables =
+    qw(geometry
+       depth
+       desktopName
+       vncClasses
+       vncUserDir
+       fontPath
+       authType
+       colorPath
+      );
+
+  if (open CONF, "<$configFile") {
+    while (<CONF>) {
+      if (/^\s*\$(\w+)\s*=\s*(.*)$/) {
+        for my $var (@configurableVariables) {
+          if ($1 eq $var) {
+            eval $_;
+            last;
+          }
+        }
+      }
+    }
+    close CONF;
+  }
 }

@@ -1070,10 +1070,10 @@ vncClientThread::run(void *arg)
 							m_client->m_copyrect_set = FALSE;
 						}
 					}
+				} // Unlock the regionLock
 
-					// Trigger an update
-					m_server->RequestUpdate();
-				}
+				// Trigger an update
+				m_server->RequestUpdate();
 			}
 			break;
 
